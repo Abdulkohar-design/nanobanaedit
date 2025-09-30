@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nano Banana Image Transformer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a;
+            color: #d1d5db;
+        }
+        .container {
+            max-width: 1000px;
+        }
+        .card {
+            background-color: #262626;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            padding: 2rem;
+        }
+        .btn-primary {
+            background-color: #f97316;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .btn-primary:hover {
+            background-color: #ea580c;
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        .btn-secondary {
+            background-color: #4b5563;
+            color: #d1d5db;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .btn-secondary:hover {
+            background-color: #6b7280;
+        }
+        .file-drop-area {
+            padding: 1rem;
+            border: 2px dashed #4b5563;
+            border-radius: 8px;
+            text-align: center;
+            transition: border-color 0.2s, background-color 0.2s;
+            position: relative;
+            overflow: hidden;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .file-drop-area:hover,
+        .file-drop-area.dragover {
+            border-color: #f97316;
+            background-color: #3f3f46;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .image-preview {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #262626;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #f97316;
+            animation: spin 1s ease infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Style for the new Prompt Pack button */
+        .btn-prompt-pack {
+            background-color: #10b981; /* Emerald Green */
+            color: white;
+            font-weight: 700;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .btn-prompt-pack:hover {
+            background-color: #059669;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-black to-gray-900 flex items-center justify-center min-h-screen p-4">
+
+    <div class="container mx-auto">
+        <div class="card">
+            <h1 class="text-3xl font-bold text-center mb-2 text-white">TEMPLATE NANO BANANA</h1>
+            <p class="text-center text-gray-400 mb-8">
+                By.IMAJINASI LOKAL <br> Kamu Tinggal Kirim Fotomu dan Pilih Model Yang Disukai
+            </p>
+            
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Input Section -->
+                <div class="w-full md:w-1/2 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Gambar Referensi 1 (Wajib)</label>
+                        <div id="dropArea1" class="file-drop-area cursor-pointer">
+                            <p id="dropText1" class="text-gray-400 px-2">Seret & lepas atau klik untuk memilih</p>
+                            <img id="previewImage1" class="image-preview hidden">
+                            <input type="file" id="imageUpload1" accept="image/*">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Gambar Referensi 2 (Opsional)</label>
+                        <div id="dropArea2" class="file-drop-area cursor-pointer">
+                            <p id="dropText2" class="text-gray-400 px-2">Seret & lepas atau klik untuk memilih</p>
+                            <img id="previewImage2" class="image-preview hidden">
+                            <input type="file" id="imageUpload2" accept="image/*">
+                        </div>
+                    </div>
+                     <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Objek Tambahan (Opsional)</label>
+                        <div id="dropArea3" class="file-drop-area cursor-pointer">
+                            <p id="dropText3" class="text-gray-400 px-2">Seret & lepas atau klik untuk memilih</p>
+                            <img id="previewImage3" class="image-preview hidden">
+                            <input type="file" id="imageUpload3" accept="image/*">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="promptSelector" class="block text-sm font-medium text-gray-300 mb-2">Pilih Template Prompt (Opsional)</label>
+                        <select id="promptSelector" class="w-full p-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-700 text-gray-200">
+                            <option value="">-- Pilih atau tulis manual di bawah --</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="promptGuide" class="block text-sm font-medium text-gray-300 mb-2">Prompt Panduan (Bisa diubah)</label>
+                        <textarea id="promptGuide" rows="5" class="w-full p-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-700 text-gray-200" placeholder="Contoh: Buat gambar realistis seorang wanita [karakter] yang sedang duduk di [latar] sambil memegang [objek]. Gunakan gaya sinematik dengan pencahayaan hangat."></textarea>
+                    </div>
+
+                    <button id="generateBtn" class="btn-primary w-full mt-4 flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-magic" viewBox="0 0 16 16">
+                            <path d="M9.5 2.672a.5.5 0 1 0 1 0V.843a.5.5 0 0 0-1 0v1.829Zm4.5.035A.5.5 0 0 0 13.293 2L12 3.293a.5.5 0 1 0 .707.707L14 2.707a.5.5 0 0 0 0-.707ZM7.293 4L8 3.293a.5.5 0 1 0-.707-.707L6.586 3.293a.5.5 0 0 0 0 .707L7.293 4Zm-.621 2.5a.5.5 0 0 0 0 .707l.621.621a.5.5 0 0 0 .707 0l-.621-.621a.5.5 0 0 0-.707 0Zm.621 3.5a.5.5 0 0 0 0 .707l.621.621a.5.5 0 0 0 .707 0l-.621-.621a.5.5 0 0 0-.707 0Zm2.864-4.964a.5.5 0 0 0 0 .707l.621.621a.5.5 0 0 0 .707 0l-.621-.621a.5.5 0 0 0-.707 0Zm.621 3.5a.5.5 0 0 0 0 .707l.621.621a.5.5 0 0 0 .707 0l-.621-.621a.5.5 0 0 0-.707 0ZM14 7.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM2 6.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm1 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/>
+                        </svg>
+                        <span>Ubah Gambar</span>
+                    </button>
+                </div>
+
+                <!-- Output Section -->
+                <div class="w-full md:w-1/2 flex flex-col items-center">
+                    <h2 class="text-xl font-bold mb-4 text-gray-300">Hasil Transformasi</h2>
+                    <div id="outputContainer" class="w-full h-full flex justify-center items-center flex-col bg-gray-800 rounded-lg p-2 min-h-[400px]">
+                        <div id="placeholder" class="text-center text-gray-500">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#f97316" class="bi bi-image-alt mx-auto mb-2" viewBox="0 0 16 16">
+                                <path d="M7 2.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0m4.225 4.053a.5.5 0 0 0-.577.093l-3.71 4.71-2.66-2.772a.5.5 0 0 0-.63.062L.002 13v2h16v-2h-.001l-4.225-6.328Z"/>
+                           </svg>
+                            Hasil akan ditampilkan di sini
+                        </div>
+                        <div id="loading" class="text-center text-gray-400 hidden flex-col items-center">
+                            <div class="spinner mb-4"></div>
+                            <p>Sedang memproses gambar...</p>
+                        </div>
+                        <img id="outputImage" class="rounded-lg w-full h-auto object-contain hidden">
+                    </div>
+                     <button id="downloadBtn" class="btn-secondary w-full mt-4 hidden">Unduh Gambar</button>
+                </div>
+            </div>
+
+            <!-- Error/Status Message Box -->
+            <div id="messageBox" class="mt-6 p-4 rounded-lg text-sm hidden"></div>
+
+            <!-- Tombol Prompt Pack Baru -->
+            <div class="mt-8 text-center border-t border-gray-700 pt-6">
+                <a href="http://lynk.id/imajinasilokal1/1915g5jq3dv9" target="_blank" rel="noopener noreferrer" class="btn-prompt-pack inline-block">
+                    Mau Prompt Yang Lebih Lengkap? Klik disini
+                </a>
+            </div>
+
+            <!-- Tombol Traktir Kopi Lama -->
+            <div class="mt-4 text-center">
+                <a href="http://lynk.id/imajinasilokal1/s/12o34vm546ld/checkout" target="_blank" rel="noopener noreferrer" class="inline-block bg-amber-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-amber-600 transition-transform transform hover:scale-105">
+                    JANGAN LUPA TRAKTIR KOPI BIAR SEMANGAT HIHIHI
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Element Selection ---
+        const generateBtn = document.getElementById('generateBtn');
+        const promptGuide = document.getElementById('promptGuide');
+        const outputImage = document.getElementById('outputImage');
+        const placeholder = document.getElementById('placeholder');
+        const loading = document.getElementById('loading');
+        const messageBox = document.getElementById('messageBox');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const promptSelector = document.getElementById('promptSelector');
+
+        // --- Prompt Database (Total 130 Prompts) ---
+        // Catatan: Gunakan (Uploaded Person) sebagai placeholder untuk subjek dari Gambar Referensi 1
+        const promptDatabase = [
+            // --- Set A: Original 15 Prompts (Konteks Indonesia & Fantasi) ---
+            { 
+                title: "Di Bawah Air Terjun Bidadari", 
+                template: "A hyper-realistic, ethereal photograph of (Uploaded Person) standing peacefully under a luminous, moss-covered jungle waterfall in a hidden cave. Soft mist, vibrant emerald tones, and light filtering through the canopy. Cinematic, 8K. --ar 3:4" 
+            },
+            { 
+                title: "Menjelajah Kota Batik Kuno", 
+                template: "A cinematic photorealistic scene of (Uploaded Person) as a traveler, walking through a magical ancient city where all the buildings are patterned with intricate gold and indigo **Batik Kawung** motifs. Foggy, warm lighting, high detail, unreal engine. --ar 3:4" 
+            },
+            { 
+                title: "Raksasa Bermain Kelereng", 
+                template: "An awe-inspiring macro photograph of a miniature (Uploaded Person) climbing a giant, perfectly smooth **marble** (kelereng). The reflection of the entire world is visible on the marble's surface. Shallow depth of field, hyper-realistic. --ar 3:4" 
+            },
+            { 
+                title: "Penjaga Pintu Dimensi", 
+                template: "A dramatic, hyper-realistic image of (Uploaded Person) standing in front of a massive, glowing, ornate **Gapura Candi Bentar** (Balinese split gate) that opens into a swirling galaxy. Dark, moody atmosphere, lit by the gateway's intense blue light. --ar 3:4" 
+            },
+            { 
+                title: "Naik Kuda Lumping Emas", 
+                template: "A vibrant, magical realism photograph of (Uploaded Person) sitting on a magnificent, glowing **Kuda Lumping** (flat woven horse) made of gold and light, flying over a misty, green rice field at dawn. Cinematic, fantasy art style. --ar 3:4" 
+            },
+            { 
+                title: "Siluet di Senja Jakarta", 
+                template: "A highly aesthetic, cinematic **cinemascope** photograph showing the silhouette of (Uploaded Person) standing on a rooftop overlooking a dense, neon-lit Jakarta cityscape during a dramatic sunset. High contrast, vaporwave colors. --ar 16:9" 
+            },
+            { 
+                title: "Melodi di Lautan Awan", 
+                template: "A beautiful, dreamy photorealistic image of (Uploaded Person) sitting on a small, solitary piano floating above a sea of perfect white clouds. They are playing, and the notes are turning into glowing birds. Magical realism, soft focus, morning light. --ar 3:4" 
+            },
+            { 
+                title: "Dewa Petir & Hujan Tropis", 
+                template: "A dramatic, high-contrast, hyper-realistic image of (Uploaded Person) as a figure controlling the storm, standing on a mountaintop during a torrential tropical rainstorm. Lightning flashes illuminate their face and wet clothes. Epic, moody, high-shutter speed photo. --ar 3:4" 
+            },
+            { 
+                title: "Patung Batu Kuno", 
+                template: "A detailed, photorealistic render of (Uploaded Person) as an ancient, moss-covered **stone temple statue**. Water droplets cling to the rough stone surface, and soft sunlight illuminates the details of the stone carving. Macro detail, volumetric lighting. --ar 3:4" 
+            },
+            { 
+                title: "Pengrajin Wayang Kulit", 
+                template: "A beautiful, warm-toned photograph of (Uploaded Person) sitting cross-legged, intricately carving a large, glowing **Wayang Kulit** puppet. The only light source is an oil lamp illuminating their focused face and the shadow puppets cast behind them. Cultural documentary style. --ar 3:4" 
+            },
+            { 
+                title: "Penyelam di Hutan Bawah Laut", 
+                template: "An ultra-realistic underwater photograph of (Uploaded Person) as a free diver, exploring a massive, vibrant coral reef that looks like a fantastical forest. Sunlight beams pierce the turquoise water. High detail, deep sea colors. --ar 3:4" 
+            },
+            { 
+                title: "Menjelma Jadi Serangga Raksasa", 
+                template: "A surreal, detailed macro photograph of (Uploaded Person) as a small figure walking across the huge, textured wing of a colorful, iridescent **Atlas Moth**. The scale is dizzying. Shallow depth of field, high-end photography. --ar 3:4" 
+            },
+            { 
+                title: "Balada Kereta Malam", 
+                template: "A cinematic shot inside a luxury vintage train car at night. (Uploaded Person) is looking contemplatively out the window, watching the neon-streaked landscape blur past. Reflections on the glass, moody warm interior lighting. High contrast film grain. --ar 3:4" 
+            },
+            { 
+                title: "Penguasa Empat Elemen", 
+                template: "A dramatic fantasy portrait of (Uploaded Person) controlling four swirling elements: **water**, **fire**, **earth**, and **air** around them. They stand at the intersection of a blazing desert, a stormy ocean, a lush forest, and a blizzard. Epic scale, concept art quality. --ar 3:4" 
+            },
+            { 
+                title: "Duduk di Gerbang Surga", 
+                template: "A serene, ultra-detailed photorealistic image of (Uploaded Person) sitting quietly on a floating rock overlooking a vast, endless landscape of golden clouds and radiant light. The atmosphere is heavenly and peaceful. Ethereal, soft light. --ar 3:4" 
+            },
+            
+            // --- Set B: 15 Prompts Tambahan (Kombinasi Gaya & Budaya) ---
+            {
+                title: "Penjual Jamu di Masa Depan",
+                template: "A retro-futuristic, photorealistic illustration of (Uploaded Person) as a street vendor selling glowing **Jamu** (traditional Indonesian herbal medicine) from a stylized cyberpunk cart in a rainy, neon-lit alley in Neo-Jakarta. Detailed, moody lighting, 8K. --ar 3:4"
+            },
+            {
+                title: "Samurai di Puncak Bromo",
+                template: "A dramatic, highly cinematic photograph of (Uploaded Person) wearing ornate **Samurai armor**, standing on the smoky ridge of Mount Bromo caldera at sunrise. Mist, volcanic dust, high contrast, epic vista. --ar 16:9"
+            },
+            {
+                title: "Penari Reog Cyberpunk",
+                template: "An intense, vibrant portrait of (Uploaded Person) performing **Reog Ponorogo** dance, but the headpiece (Singa Barong) is made of glowing chrome, fiber optics, and neon tubes. Studio lighting, dynamic pose, cyberpunk aesthetic. --ar 3:4"
+            },
+            {
+                title: "Kapten Bajak Laut di Kepulauan Seribu",
+                template: "A realistic portrait of (Uploaded Person) as a rugged **Pirate Captain** with detailed leather gear, standing confidently on the deck of a traditional **Phinisi sailboat** anchored in the turquoise waters of the Thousand Islands (Kepulauan Seribu). Golden hour. --ar 3:4"
+            },
+            {
+                title: "Astronot di Candi Borobudur",
+                template: "A surreal, high-resolution photograph: (Uploaded Person) is an **Astronaut** in a highly detailed suit, exploring the ancient, mist-covered stupas of Borobudur Temple at dawn. The sky is dark blue with visible stars. --ar 16:9"
+            },
+            {
+                title: "Lukisan Cat Minyak Klasik",
+                template: "A masterpiece **oil painting portrait** in the style of Rembrandt/Vermeer of (Uploaded Person). Rich textures, dark background, dramatic chiaroscuro lighting, deep colors. Highly detailed brushstrokes, studio setup. --ar 3:4"
+            },
+            {
+                title: "Pahlawan Super Bertema Garuda",
+                template: "A full-body, action shot of (Uploaded Person) as a powerful **superhero** wearing highly detailed, flowing armor inspired by the **Garuda bird**. They are flying high above a cityscape at night. Comic book art style, dynamic lighting. --ar 3:4"
+            },
+            {
+                title: "Gadis Penyihir di Hutan Tropis",
+                template: "A beautiful, dark fantasy photograph of (Uploaded Person) as a **witch/sorceress** wearing flowing, natural robes, standing in a dense, fog-filled tropical rainforest. Glowing fungi, subtle magic effects, volumetric lighting. --ar 3:4"
+            },
+            {
+                title: "Ilustrasi Buku Anak Lucu",
+                template: "A cheerful, **whimsical children's book illustration** of (Uploaded Person) surrounded by talking jungle animals (Orangutan, Tarsier) in a vibrant, stylized Indonesian jungle. Soft colors, smooth edges, perfect for a bedtime story. --ar 3:4"
+            },
+            {
+                title: "Potret Gaya Film Noir",
+                template: "A high-contrast, black-and-white **Film Noir style portrait** of (Uploaded Person). Shadowy room, stark shadows from Venetian blinds across the face, wearing a trench coat. Dramatic, gritty, cinematic still. --ar 3:4"
+            },
+            {
+                title: "Pemburu Harta Karun di Hutan Kalimantan",
+                template: "A hyper-realistic photograph of (Uploaded Person) as a rugged **Treasure Hunter** (like Indiana Jones), pushing through dense, unexplored Kalimantan jungle foliage, holding an old map. Sunlight filtering through the canopy, high adventure style. --ar 3:4"
+            },
+            {
+                title: "Patung Emas Majapahit",
+                template: "An extreme detail render of (Uploaded Person) transformed into a magnificent, ancient **Majapahit Gold Sculpture**. The surface is polished, reflecting light with intricate filigree details and historical craftsmanship. Studio light, macro photography. --ar 3:4"
+            },
+            {
+                title: "Karakter Game RPG Fantasi",
+                template: "A highly detailed, epic **Fantasy RPG character concept art** of (Uploaded Person) as a powerful Mage/Warrior, wearing elaborate armor and wielding a glowing weapon. Standing on a cliff overlooking a fantasy world. Unreal Engine render, 4K concept art. --ar 3:4"
+            },
+            {
+                title: "Penguasa Dunia Bawah Laut",
+                template: "An ultra-realistic, fantasy portrait of (Uploaded Person) as a mythical **Ruler of an Underwater Kingdom**, with bioluminescent armor and hair flowing in the deep ocean currents. Surrounded by glowing sea creatures. Deep blue color palette. --ar 3:4"
+            },
+            {
+                title: "Foto Gaya Vogue 90an",
+                template: "A fashion magazine style photograph of (Uploaded Person) in the aesthetic of **1990s Vogue**: minimalist styling, bold expression, slightly grainy film texture, stark white or gray studio background. High fashion editorial, shot on medium format. --ar 3:4"
+            },
+
+            // --- Set C: 25 Prompts Baru (Sci-Fi, Steampunk, dan Dystopia) ---
+            {
+                title: "Pilot Mecha di Jakarta",
+                template: "A dramatic, photorealistic illustration of (Uploaded Person) in a heavily armored **mech suit** cockpit, looking out over a destroyed, rainy Jakarta cityscape at night. Sci-fi, cinematic lighting, volumetric fog. --ar 16:9"
+            },
+            {
+                title: "Agen Rahasia Steampunk",
+                template: "A detailed photograph of (Uploaded Person) as a refined **Steampunk Agent**, wearing a leather duster and goggles, standing next to a brass and copper airship in an old colonial port. Victorian science fiction. --ar 3:4"
+            },
+            {
+                title: "Hacker di Ruangan Server Neon",
+                template: "A vibrant cyberpunk portrait of (Uploaded Person) wearing glowing optical implants, sitting in a dark server room filled with intense blue and pink neon light reflections. Glitch aesthetic, high tech. --ar 3:4"
+            },
+            {
+                title: "Eksplorasi Planet Merah",
+                template: "A wide-angle, cinematic photo of (Uploaded Person) as an astronaut, planting an Indonesian flag on the desolate, red surface of a Mars-like planet. Dusty atmosphere, visible earth in the sky. --ar 16:9"
+            },
+            {
+                title: "Warga Desa Terapung",
+                template: "A matte painting of a serene village (like **Wae Rebo**) but floating high above the clouds, connected by intricate wooden bridges. (Uploaded Person) is standing on a balcony, looking down. Fantasy architecture. --ar 16:9"
+            },
+            {
+                title: "Petugas Stasiun Luar Angkasa",
+                template: "A photorealistic shot inside a clean, futuristic **space station**. (Uploaded Person) is wearing a simple uniform, looking out a large circular window at the rotating Earth. High key lighting. --ar 3:4"
+            },
+            {
+                title: "Penyintas di Kota Dystopia",
+                template: "A dark, gritty photograph of (Uploaded Person) as a survivor, crouching behind rubble in a post-apocalyptic city street, heavy rain, minimal color palette. Cinematic depth of field. --ar 3:4"
+            },
+            {
+                title: "Penambang Kristal di Gua",
+                template: "A highly detailed render of (Uploaded Person) wearing rugged mining gear, illuminated by the intense purple glow of giant, jagged crystals deep within a dark cave system. Unreal Engine, fantasy environment. --ar 3:4"
+            },
+            {
+                title: "Mobil Terbang di Masa Depan",
+                template: "A cinematic shot from inside a **flying car**. (Uploaded Person) is driving, with the neon traffic and towering skyscrapers of a future city blurred in the background. Vapourwave, motion blur. --ar 16:9"
+            },
+            {
+                title: "Robot Kuno Berlumut",
+                template: "A photorealistic image of (Uploaded Person) touching a massive, abandoned **ancient robot** or golem covered in jungle moss and vines. Soft, diffused jungle light. Cinematic exploration. --ar 3:4"
+            },
+            {
+                title: "Ilmuwan Gila di Laboratorium",
+                template: "A moody portrait of (Uploaded Person) as a brilliant but slightly unhinged scientist, surrounded by bubbling liquids, tesla coils, and analog equipment in a dark laboratory. Low-key lighting, film grain. --ar 3:4"
+            },
+            {
+                title: "Penjelajah Waktu Vintage",
+                template: "A portrait of (Uploaded Person) in elaborate **Victorian-era clothing** stepping out of a glowing, antique time machine in a modern public library. High detail, slightly surreal. --ar 3:4"
+            },
+            {
+                title: "Pengembala Naga Miniatur",
+                template: "A beautiful macro photograph of (Uploaded Person) as a tiny figure gently feeding a group of glowing, iridescent **miniature dragons** on a mossy rock. Extreme detail, bokeh background. --ar 3:4"
+            },
+            {
+                title: "Fashion Show di Gurun Pasir",
+                template: "A high-end, gritty fashion photograph of (Uploaded Person) wearing avant-garde clothing, posing dramatically against a massive sand dune during a windstorm. Desaturated colors, Mad Max aesthetic. --ar 16:9"
+            },
+            {
+                title: "Penjaga Perpustakaan Kosmik",
+                template: "A fantasy concept art render of (Uploaded Person) standing in an infinite library where the bookshelves stretch into space, filled with glowing nebula and stars. Magical, cosmic aesthetic. --ar 3:4"
+            },
+            {
+                title: "Desainer Baju Luar Angkasa",
+                template: "A hyper-realistic studio photo of (Uploaded Person) as a futuristic fashion designer, sketching elaborate space suit designs on a holographic table. Clean, modern, high-tech interior. --ar 3:4"
+            },
+            {
+                title: "Pengendali Gelombang Suara",
+                template: "A surreal image of (Uploaded Person) standing in an urban environment, their hands emitting visible, colored **sound waves** that distort the buildings around them. Abstract, vibrant colors. --ar 3:4"
+            },
+            {
+                title: "Seniman Graffiti Cyberpunk",
+                template: "A dark, atmospheric street photo of (Uploaded Person) as a graffiti artist, illuminated by the beam of their own glowing spray can against a highly detailed, neon-tagged wall. Rain, gritty texture. --ar 3:4"
+            },
+            {
+                title: "Mantra di Candi yang Rusak",
+                template: "A cinematic night photograph of (Uploaded Person) performing an ancient ritual, surrounded by floating, glowing Javanese script (aksara Jawa) within the ruined walls of a massive, jungle-overgrown temple. Dark magic, high contrast. --ar 3:4"
+            },
+            {
+                title: "Petarung Ring Virtual Reality",
+                template: "An intense action shot of (Uploaded Person) as an MMA fighter inside a **virtual reality ring**. The environment is a glowing, wireframe grid, highly detailed synthetic textures. Gaming aesthetic. --ar 16:9"
+            },
+            {
+                title: "Pencipta Semesta Miniatur",
+                template: "A macro/surreal photo of (Uploaded Person)'s hands carefully assembling a tiny, detailed **solar system** or galaxy inside a glass terrarium. Magical realism, focus on hands. --ar 3:4"
+            },
+            {
+                title: "Penyanyi Hologram",
+                template: "A highly futuristic photograph of (Uploaded Person) as a pop star, performing on stage with intricate, transparent **holographic projections** dancing around them. Concert lighting, dramatic smoke. --ar 16:9"
+            },
+            {
+                title: "Berdiri di Atas Kapal Karam",
+                template: "An ultra-realistic deep-sea photo: (Uploaded Person) as a professional diver standing on the mossy deck of a massive, ancient **sunken shipwreck**. Lit by powerful diving lights, dark atmosphere. --ar 3:4"
+            },
+            {
+                title: "Pemandangan Low-Poly",
+                template: "A beautiful, stylized low-poly 3D render of (Uploaded Person) standing on a hill overlooking a colorful, geometric landscape of mountains and trees. Minimalist, vibrant, video game aesthetic. --ar 16:9"
+            },
+            {
+                title: "Penjaga Hutan Purba",
+                template: "A stunning photorealistic image of (Uploaded Person) as a stoic, mythical forest guardian with flowing hair and wooden armor, standing in a pristine, ancient jungle filled with giant ferns and glowing insects. Fantasy, epic. --ar 3:4"
+            },
+
+            // --- Set D: 25 Prompts Gaya Seni dan Film (Wes Anderson, Anime, dll) ---
+            {
+                title: "Gaya Film Wes Anderson",
+                template: "A perfectly symmetrical, highly detailed, slightly desaturated color palette photo of (Uploaded Person) waiting at a vintage train station platform. **Wes Anderson film style**, pastel colors, intentional framing. --ar 16:9"
+            },
+            {
+                title: "Gaya Animasi Studio Ghibli",
+                template: "A hand-drawn style anime illustration of (Uploaded Person) sitting by a large, sunny window overlooking a magical rural landscape with floating islands. **Studio Ghibli art style**, soft shading, vibrant greens. --ar 16:9"
+            },
+            {
+                title: "Lukisan Impresionis Van Gogh",
+                template: "A beautiful, thick-brushstroke **Impressionist oil painting** of (Uploaded Person) standing in a field of sunflowers under a swirling blue sky, in the style of Van Gogh. Expressive colors, visible texture. --ar 3:4"
+            },
+            {
+                title: "Ilustrasi Disney Klasik",
+                template: "A hand-drawn, cell-shaded animation style illustration of (Uploaded Person) as a charming Disney prince/princess, singing in a colorful forest surrounded by cute, talking animals. Magical, bright. --ar 3:4"
+            },
+            {
+                title: "Komik Noir Frank Miller",
+                template: "A stark, black-and-white **graphic novel panel** illustration of (Uploaded Person). High contrast, heavy shadows, rain-streaked, gritty comic art style like Frank Miller's Sin City. --ar 3:4"
+            },
+            {
+                title: "Potret Gaya Fotografi Lomo",
+                template: "A low-fidelity, heavily saturated color photograph of (Uploaded Person) with intentional light leaks, deep vignetting, and strong contrast. **Lomography film aesthetic**. --ar 3:4"
+            },
+            {
+                title: "Poster Film Bollywood",
+                template: "A vibrant, overly dramatic movie poster illustration of (Uploaded Person) in elaborate costume, posing heroically with bold, stylized typography in the background. **Bollywood film poster art**. --ar 16:9"
+            },
+            {
+                title: "Sketsa Pensil Realistis",
+                template: "A meticulous, highly detailed **photorealistic graphite pencil drawing** of (Uploaded Person). Focus on shading, texture, and light reflection on the skin, white background. --ar 3:4"
+            },
+            {
+                title: "Gaya Seni Rakyat Meksiko (Frida Kahlo)",
+                template: "A brightly colored, stylized folk art portrait of (Uploaded Person) with exaggerated features and surrounded by local tropical flowers and symbols, inspired by **Frida Kahlo**. Bold outlines. --ar 3:4"
+            },
+            {
+                title: "Patung Lilin Realistis",
+                template: "An extreme close-up, hyper-realistic photo of (Uploaded Person) as a perfectly sculpted **Madame Tussauds wax figure**. Focus on texture, subtle sheen on the 'wax' skin. Studio light. --ar 3:4"
+            },
+            {
+                title: "Karikatur Majalah The New Yorker",
+                template: "A clever, minimalist, black-and-white **New Yorker style cartoon/caricature** of (Uploaded Person) doing a mundane task, elegant single-line drawing style. --ar 3:4"
+            },
+            {
+                title: "Lukisan Digital Fantasi (ArtStation)",
+                template: "A professional, highly-polished **digital painting** of (Uploaded Person) as a character from a major fantasy video game (like Witcher or Final Fantasy). Epic environment, strong backlight. --ar 16:9"
+            },
+            {
+                title: "Gaya Poster Art Deco 1920-an",
+                template: "A geometric, stylized travel poster illustration of (Uploaded Person) in elegant 1920s fashion, posing in front of a landmark (like the **National Monument - Monas**). Bold colors, flat shading, **Art Deco style**. --ar 3:4"
+            },
+            {
+                title: "Foto Gaya Album Rock 70-an",
+                template: "A grainy, slightly psychedelic color photo of (Uploaded Person) with long hair and vintage rock fashion, posing dramatically in a dusty landscape. **1970s classic rock album cover aesthetic**. --ar 16:9"
+            },
+            {
+                title: "Patung Balok Lego",
+                template: "A detailed 3D render of (Uploaded Person) constructed entirely out of brightly colored, interlocking **Lego blocks**. Macro view, shallow depth of field. --ar 3:4"
+            },
+            {
+                title: "Desain Karakter Pixel Art 16-Bit",
+                template: "A detailed **16-bit pixel art sprite** of (Uploaded Person) as a fantasy game character. Isometric view, vibrant limited color palette. Retro video game style. --ar 1:1"
+            },
+            {
+                title: "Gaya Seni Pop Art Andy Warhol",
+                template: "A portrait of (Uploaded Person) repeated four times in different vibrant, flat, and clashing color schemes, reminiscent of the **Andy Warhol Pop Art** screen printing technique. --ar 1:1"
+            },
+            {
+                title: "Foto Gaya Majalah National Geographic",
+                template: "A stunning, documentary-style photograph of (Uploaded Person) looking intensely into the camera lens while participating in a traditional craft/ritual in a remote area. **National Geographic photography style**, natural light. --ar 3:4"
+            },
+            {
+                title: "Ukiran Kayu Tradisional Bali",
+                template: "A hyper-detailed render of (Uploaded Person) as a complex, ornate **Traditional Balinese Wooden Carving**. Deep brown wood, focus on the intricate, mythological details of the carving. --ar 3:4"
+            },
+            {
+                title: "Gaya Cat Air Ilustrasi Botani",
+                template: "A delicate, highly detailed **botanical watercolor illustration** of (Uploaded Person) surrounded by detailed studies of Indonesian flowers (Rafflesia, Anggrek). Soft colors, white background. --ar 3:4"
+            },
+            {
+                title: "Foto Gaya Sampul Album Hip Hop",
+                template: "A stark, low-key, stylish photograph of (Uploaded Person) in modern streetwear, standing in front of a blurred urban background at night. Gritty texture, high fashion hip hop album cover aesthetic. --ar 1:1"
+            },
+            {
+                title: "Patung Es Arktik",
+                template: "An ultra-realistic render of (Uploaded Person) sculpted entirely out of clear blue **Arctic Ice**. Light passes through the transparent ice, creating crystalline structures and refractions. Extremely cold, high detail. --ar 3:4"
+            },
+            {
+                title: "Lukisan Seni Kontemporer Abstrak",
+                template: "An expressive, colorful **abstract expressionist painting** where the form of (Uploaded Person) is suggested through bold, thick strokes of oil paint, splatters, and texture, in the style of Jackson Pollock or Willem de Kooning. --ar 16:9"
+            },
+            {
+                title: "Karakter Kartun 90-an (Nickelodeon)",
+                template: "A thick-lined, brightly colored, slightly grotesque **90s Nickelodeon cartoon style** drawing of (Uploaded Person) making a silly face. Exaggerated features, flat colors. --ar 3:4"
+            },
+            {
+                title: "Foto Gaya Sampul Buku Fantasi Remaja",
+                template: "A dramatic, slightly airbrushed photo of (Uploaded Person) wearing a hooded cloak, looking intensely into the distance on a mountain peak at sunset. **YA Fantasy book cover style**. --ar 3:4"
+            },
+
+            // --- Set E: 50 Prompts Ekstra (Mix Budaya, Realisme & Aestetik) ---
+            {
+                title: "Pelukis di Ubud",
+                template: "A warm, realistic photograph of (Uploaded Person) as a painter, sitting cross-legged and focused on painting a rice field landscape on a canvas in a sunny, wooden studio in **Ubud, Bali**. Soft natural light. --ar 3:4"
+            },
+            {
+                title: "Chef Kaki Lima Modern",
+                template: "A close-up, moody, cinematic photograph of (Uploaded Person) as a charismatic street food chef (kaki lima), dramatically flipping a wok full of glowing noodles over an intense fire. Smoke, warm lighting, high action. --ar 16:9"
+            },
+            {
+                title: "Gadis dengan Topeng Hudoq",
+                template: "A mysterious, hyper-realistic photo of (Uploaded Person) wearing an elaborate, beautifully carved **Hudoq mask** (Kalimantan traditional mask), standing in a deep, foggy forest. Cultural, detailed texture. --ar 3:4"
+            },
+            {
+                title: "Pembalap Formula E di Monas",
+                template: "A stunning, action-packed photograph of (Uploaded Person) as a sleek **Formula E race car driver**, standing in front of the brightly lit Monas at night. High contrast, motion blur on the background. --ar 16:9"
+            },
+            {
+                title: "Musisi Jazz di Lorong Tua",
+                template: "A black-and-white, gritty photograph of (Uploaded Person) playing a saxophone/trumpet in a dimly lit, rain-streaked alleyway in Old Jakarta. **Jazz club aesthetic, film grain**. --ar 3:4"
+            },
+            {
+                title: "Pendekar Silat Gunung",
+                template: "A dramatic full-body shot of (Uploaded Person) as a legendary **Pendekar Silat**, performing a martial art move on a misty mountain peak (like **Merbabu**). Traditional attire, epic scale. --ar 3:4"
+            },
+            {
+                title: "Pemanah di Reruntuhan Kuno",
+                template: "An action fantasy photograph of (Uploaded Person) as a skilled archer, poised with a bow and arrow amidst the ancient, overgrown stone ruins of a forgotten temple in the jungle. --ar 3:4"
+            },
+            {
+                title: "Fashion Etnik Tenun Ikat",
+                template: "A high-end, editorial fashion photo of (Uploaded Person) wearing avant-garde clothing intricately woven with **Sumbanese Tenun Ikat** patterns. Minimalist studio background, strong lighting. --ar 3:4"
+            },
+            {
+                title: "Penjaga Mercusuar di Tengah Badai",
+                template: "A highly dramatic, stormy photograph of (Uploaded Person) standing on the balcony of an old, weathered **lighthouse** as massive waves crash below. Dark clouds, lightning flashes. --ar 3:4"
+            },
+            {
+                title: "Mantra di Danau Kelimutu",
+                template: "A surreal, ethereal portrait of (Uploaded Person) standing on the edge of one of the vividly colored **Kelimutu Crater Lakes** (Flores). Mystical fog, high saturation colors. --ar 3:4"
+            },
+            {
+                title: "Potret Vintage Era 1940-an",
+                template: "A sepia-toned, slightly grainy studio portrait of (Uploaded Person) wearing formal attire from the **1940s**. Soft focus, classic Hollywood lighting. --ar 3:4"
+            },
+            {
+                title: "Wali Kota Masa Depan (Art Deco)",
+                template: "A grand, imposing portrait of (Uploaded Person) as a powerful, benevolent future mayor, standing in a large, clean, **Art Deco skyscraper lobby**. Cinematic, golden tones. --ar 3:4"
+            },
+            {
+                title: "Penjelajah Gurun Pasir Hitam",
+                template: "A gritty, epic photograph of (Uploaded Person) wearing a mask and robes, traversing a massive, alien-looking **black sand desert** (like in Iceland/Lombok). High contrast, harsh sun. --ar 16:9"
+            },
+            {
+                title: "Gadis Pengantar Surat di Venice",
+                template: "A soft, romantic, slightly dreamy photo of (Uploaded Person) wearing a vintage uniform, delivering mail via a gondola on a sunny canal in **Venice, Italy**. Pastel colors. --ar 3:4"
+            },
+            {
+                title: "Karakter Game Fighting Mortal Kombat",
+                template: "An aggressive, highly detailed action render of (Uploaded Person) in stylized armor, mid-fight pose with energy effects, in the brutal aesthetic of **Mortal Kombat**. Dark background. --ar 3:4"
+            },
+            {
+                title: "Pemain Sepak Bola Lapangan Tanah",
+                template: "An energetic, realistic photograph of (Uploaded Person) as a determined **local village football player**, kicking a dusty ball on a bare dirt field at sunset. Sweat and action, authentic look. --ar 16:9"
+            },
+            {
+                title: "Ahli Biologi Laut Dalam",
+                template: "A stunning, dark photograph of (Uploaded Person) in a heavily reinforced deep-sea submersible, viewing a rare, **bioluminescent anglerfish** through the reinforced glass. Deep blue, glowing elements. --ar 3:4"
+            },
+            {
+                title: "Pemimpin Suku Baduy",
+                template: "A respectful, detailed portrait of (Uploaded Person) wearing the traditional, simple white and black attire of the **Baduy Dalam tribe**. Standing in a natural, serene jungle setting. Documentary style. --ar 3:4"
+            },
+            {
+                title: "Perancang Busana Jepang Modern",
+                template: "A high-contrast, avant-garde black and white street fashion photo of (Uploaded Person) wearing elaborate, deconstructed clothing in the style of **Yohji Yamamoto/Comme des Garçons** in Harajuku, Tokyo. --ar 3:4"
+            },
+            {
+                title: "Fotografer di Hutan Mangrove",
+                template: "A realistic photograph of (Uploaded Person) as a nature photographer, wading through the muddy waters of a dense **Mangrove forest** at sunrise, camera in hand. Mist and warm golden light. --ar 16:9"
+            },
+            {
+                title: "Malaikat Penjaga Gerbang",
+                template: "An epic, high-fantasy render of (Uploaded Person) as a huge **angelic warrior** with towering, glowing white/gold wings, standing guard at a massive marble gate. Divine light, unreal engine. --ar 3:4"
+            },
+            {
+                title: "Prajurit Kerajaan Sriwijaya",
+                template: "A historical fantasy illustration of (Uploaded Person) as an elite **Sriwijaya Kingdom warrior** wearing ancient gold and silk armor, standing on the riverbank overlooking a busy harbor. Detailed, vibrant colors. --ar 3:4"
+            },
+            {
+                title: "Seniman Tato Tradisional Mentawai",
+                template: "A compelling, close-up documentary photo of (Uploaded Person) as a traditional **Mentawai tattoo artist (Sikerei)**, using natural tools to perform a ritualistic tattooing process. Focused lighting, detailed skin texture. --ar 3:4"
+            },
+            {
+                title: "Potret Gaya Album R&B Modern",
+                template: "A clean, minimalist, sensual portrait of (Uploaded Person) against a deep, rich color background (like burgundy or teal). Soft box lighting, fashion-forward, modern R&B album cover aesthetic. --ar 3:4"
+            },
+            {
+                title: "Pengejar Alien di Hutan Amazon",
+                template: "A dark, intense photo of (Uploaded Person) wearing military tactical gear, searching for mysterious, glowing evidence in a dense, dark **Amazon rainforest**. Night vision effects, grainy. --ar 16:9"
+            },
+            {
+                title: "Chef Bintang Michelin di Dapur",
+                template: "A high-quality, professional food photography style picture of (Uploaded Person) as a calm **Michelin-star chef**, plating a delicate dish in a pristine, stainless steel kitchen. Focus on action and detail. --ar 3:4"
+            },
+            {
+                title: "Petugas Kebun Binatang yang Ajaib",
+                template: "A whimsical, fantastical image of (Uploaded Person) as a zookeeper, gently feeding a mythical creature (like a glowing feathered serpent) in a beautifully constructed, overgrown enclosure. Magical realism. --ar 3:4"
+            },
+            {
+                title: "Peneliti Virus di Lab Karantina",
+                template: "A serious, high-tech photograph of (Uploaded Person) wearing a full hazmat suit, looking intently through a microscope in a brightly lit, sterile **quarantine laboratory**. Sci-fi thriller style. --ar 3:4"
+            },
+            {
+                title: "Prajurit Berkuda di Savana NTT",
+                template: "An epic wide-shot photograph of (Uploaded Person) as a proud warrior on horseback, galloping across the vast, golden **Savana of Sumba (NTT)** at sunset. Dust, wind, cinematic. --ar 16:9"
+            },
+            {
+                title: "Lukisan Akrilik Neon",
+                template: "A vibrant, bold **neon acrylic painting** portrait of (Uploaded Person). Heavy, thick lines, dripping paint, and colors that look like they glow under blacklight. Street art inspired. --ar 3:4"
+            },
+            {
+                title: "Gaya Foto Katalog IKEA",
+                template: "A sterile, bright, and perfectly staged photograph of (Uploaded Person) sitting casually on minimalist furniture in a clean, modern apartment. **IKEA furniture catalog aesthetic**. --ar 16:9"
+            },
+            {
+                title: "Pelukis di Jalanan Paris",
+                template: "A warm, realistic street photography shot of (Uploaded Person) setting up an easel to paint near the **Eiffel Tower** in Paris, wearing a classic French artist's beret and scarf. Cozy atmosphere. --ar 3:4"
+            },
+            {
+                title: "Penjinak Buaya di Sungai Papua",
+                template: "An intense, close-up documentary photo of (Uploaded Person) as a local **wildlife expert**, gently handling a large crocodile on the muddy bank of a remote Papua river. Gritty realism. --ar 3:4"
+            },
+            {
+                title: "Tukang Reparasi Robot Kuno",
+                template: "A detailed, dark steampunk workshop scene. (Uploaded Person) is meticulously repairing the gears and wires of a complex, damaged brass and copper robot using small tools. Focus on detail and warm lighting. --ar 3:4"
+            },
+            {
+                title: "Potret Gaya Film Thriller Korea",
+                template: "A dark, stylish, rain-streaked, moody portrait of (Uploaded Person) looking suspicious, illuminated only by the light of a flickering neon sign. **Korean neo-noir film aesthetic**. --ar 3:4"
+            },
+            {
+                title: "Penjelajah Piramida Mesir",
+                template: "A wide-angle, epic shot of (Uploaded Person) standing tiny next to the massive, ancient **Pyramids of Giza**, exploring a newly discovered tunnel entrance. Harsh desert light. --ar 16:9"
+            },
+            {
+                title: "Pemanah di Hutan Bambu",
+                template: "A peaceful, beautiful photograph of (Uploaded Person) practicing archery in a dense, towering **bamboo forest** (like in Kyoto). Soft green light, tranquil atmosphere. --ar 3:4"
+            },
+            {
+                title: "Pengendali Air dan Es",
+                template: "A powerful fantasy render of (Uploaded Person) conjuring massive pillars of water and sharp spikes of ice around them in a stormy coastal environment. Epic elemental magic, high detail. --ar 3:4"
+            },
+            {
+                title: "Karakter Game RPG Pokemon",
+                template: "A bright, stylized illustration of (Uploaded Person) as a cheerful **Pokemon Trainer**, standing confidently with a highly detailed, realistic version of a beloved Pokemon (like Pikachu or Charizard) next to them in a grassy field. --ar 3:4"
+            },
+            {
+                title: "Foto Gaya Album Indie Pop",
+                template: "A soft-focus, vintage film photo of (Uploaded Person) sitting on a slightly broken vintage television in a pastel-colored room. Dreamy lighting, ethereal, indie pop album cover aesthetic. --ar 1:1"
+            },
+            {
+                title: "Pekerja Tambang Batubara Dystopia",
+                template: "A grim, smoky, photorealistic scene of (Uploaded Person) wearing rugged, futuristic mining gear, working deep inside a dark, oppressive **coal mine**. Industrial, harsh lighting. --ar 3:4"
+            },
+            {
+                title: "Seniman Jalanan (Banksy Style)",
+                template: "A stencil-style, black-and-white street art illustration of (Uploaded Person) spray-painted onto a rough brick wall. **Banksy stencil art aesthetic**, with one splash of bright color. --ar 3:4"
+            },
+            {
+                title: "Penyanyi Opera Klasik",
+                template: "A dramatic, luxurious portrait of (Uploaded Person) as a professional opera singer, wearing an extravagant gown/tuxedo, bathed in intense spotlight on an opulent stage. Classic theater aesthetic. --ar 3:4"
+            },
+            {
+                title: "Model di Salju Jepang",
+                template: "A striking fashion photo of (Uploaded Person) wearing a designer coat, standing in heavy, pristine white snow in a traditional Japanese garden setting. High fashion, cold color palette. --ar 3:4"
+            },
+            {
+                title: "Pilot Pesawat Tempur Era PD II",
+                template: "A nostalgic, grainy photograph of (Uploaded Person) as a brave **WWII fighter pilot**, wearing a leather helmet and goggles, standing next to a classic P-51 Mustang plane. Vintage, sepia tones. --ar 3:4"
+            },
+            {
+                title: "Penjelajah Gua Kristal",
+                template: "A breathtaking underground photograph of (Uploaded Person) as an intrepid caver, rappelling down into a huge cavern filled with massive, naturally occurring **quartz crystals**. Headlamp illumination. --ar 16:9"
+            },
+            {
+                title: "Raja Hutan (Tarzan Style)",
+                template: "A dynamic, muscular photorealistic image of (Uploaded Person) swinging through the dense jungle vines (like in Kalimantan or Papua), bare-chested and fearless. High detail, vibrant green background. --ar 3:4"
+            },
+            {
+                title: "Potret Gaya Album Grunge 90-an",
+                template: "A grainy, slightly out-of-focus, dark photograph of (Uploaded Person) with messy hair and flannel shirt, posing in a dingy garage. **1990s Grunge music aesthetic**. --ar 1:1"
+            },
+            {
+                title: "Pembangun Kota Terapung (Art Nouveau)",
+                template: "A beautiful, highly stylized illustration of (Uploaded Person) as an architect, designing a magnificent, detailed city that floats on the water, in the flowing, organic lines of **Art Nouveau** (Mucha style). --ar 3:4"
+            },
+            {
+                title: "Penyiar Berita Vintage TV",
+                template: "A slightly blurry, low-resolution image of (Uploaded Person) as a serious news anchor, sitting in a wood-paneled TV studio from the **1970s**. Retro screen effects. --ar 4:3"
+            },
+            {
+                title: "Pahlawan dari Cerita Rakyat",
+                template: "A vibrant, dynamic illustration of (Uploaded Person) as a legendary figure from Indonesian folklore (e.g., **Sangkuriang, Lutung Kasarung**), mid-action in a fantastical, stylized setting. --ar 3:4"
+            },
+            {
+                title: "Potret Gaya Film Dokumenter VICE",
+                template: "A gritty, raw, unpolished photograph of (Uploaded Person) looking directly at the camera, wearing modern, slightly distressed clothing in an unusual, challenging urban environment. **VICE documentary aesthetic**. --ar 16:9"
+            }
+        ];
+
+        // --- API Configuration ---
+        // The API key is managed by the environment, leaving it blank here.
+        const apiKey = ""; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
+
+        // --- Helper Functions ---
+        function showMessage(text, type = 'info') {
+            messageBox.textContent = text;
+            messageBox.style.display = 'block';
+            messageBox.className = type === 'error' 
+                ? 'mt-6 p-4 rounded-lg text-sm bg-red-800 text-red-300' 
+                : 'mt-6 p-4 rounded-lg text-sm bg-gray-700 text-gray-300';
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        function setupImageUploader(dropAreaId, imageUploadId, dropTextId, previewImageId) {
+            const dropArea = document.getElementById(dropAreaId);
+            const imageUpload = document.getElementById(imageUploadId);
+            const dropText = document.getElementById(dropTextId);
+            const previewImage = document.getElementById(previewImageId);
+
+            const handleFile = (file) => {
+                if (file && file.type.startsWith('image/')) {
+                    dropText.classList.add('hidden');
+                    previewImage.src = URL.createObjectURL(file);
+                    previewImage.classList.remove('hidden');
+                } else {
+                    dropText.classList.remove('hidden');
+                    previewImage.classList.add('hidden');
+                    imageUpload.value = '';
+                }
+            };
+
+            dropArea.addEventListener('dragover', (e) => { e.preventDefault(); dropArea.classList.add('dragover'); });
+            dropArea.addEventListener('dragleave', () => dropArea.classList.remove('dragover'));
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    imageUpload.files = files;
+                    handleFile(files[0]);
+                }
+            });
+            dropArea.addEventListener('click', () => imageUpload.click());
+            imageUpload.addEventListener('change', () => handleFile(imageUpload.files[0]));
+        }
+
+        async function fetchWithExponentialBackoff(url, options, retries = 5, delay = 1000) {
+            try {
+                const response = await fetch(url, options);
+                if (response.status === 429 && retries > 0) {
+                    console.log(`Rate limit exceeded. Retrying in ${delay / 1000}s...`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return fetchWithExponentialBackoff(url, options, retries - 1, delay * 2);
+                }
+                return response;
+            } catch (error) {
+                if (retries > 0) {
+                    console.log(`Fetch error: ${error.message}. Retrying in ${delay / 1000}s...`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return fetchWithExponentialBackoff(url, options, retries - 1, delay * 2);
+                }
+                throw error;
+            }
+        }
+
+        // --- Main Logic ---
+
+        // Populate the prompt dropdown
+        function populatePrompts() {
+            // Clear existing options first
+            promptSelector.innerHTML = '<option value="">-- Pilih atau tulis manual di bawah --</option>';
+            
+            promptDatabase.forEach((prompt, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = prompt.title;
+                promptSelector.appendChild(option);
+            });
+        }
+
+        // Event listener for the dropdown to update the textarea
+        promptSelector.addEventListener('change', () => {
+            const selectedIndex = promptSelector.value;
+            if (selectedIndex !== "") {
+                // Ensure index is parsed as integer
+                promptGuide.value = promptDatabase[parseInt(selectedIndex)].template;
+            } else {
+                promptGuide.value = ""; // Clear textarea if the default option is selected
+            }
+        });
+        
+        // Setup all three image uploaders
+        setupImageUploader('dropArea1', 'imageUpload1', 'dropText1', 'previewImage1');
+        setupImageUploader('dropArea2', 'imageUpload2', 'dropText2', 'previewImage2');
+        setupImageUploader('dropArea3', 'imageUpload3', 'dropText3', 'previewImage3');
+        
+        // Initial population of prompts
+        populatePrompts();
+
+        // Generate button click event listener
+        generateBtn.addEventListener('click', async () => {
+            const file1 = document.getElementById('imageUpload1').files[0];
+            const file2 = document.getElementById('imageUpload2').files[0];
+            const file3 = document.getElementById('imageUpload3').files[0];
+            const promptText = promptGuide.value;
+
+            if (!file1) {
+                showMessage('Gambar Referensi 1 wajib diunggah.', 'error');
+                return;
+            }
+            if (!promptText) {
+                showMessage('Prompt Panduan tidak boleh kosong. Pilih template atau tulis manual.', 'error');
+                return;
+            }
+
+            loading.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+            outputImage.classList.add('hidden');
+            downloadBtn.classList.add('hidden');
+            messageBox.style.display = 'none';
+            generateBtn.disabled = true;
+
+            try {
+                // The text prompt MUST come first in the parts array
+                const parts = [{ text: promptText }];
+                
+                // Add images to the parts array
+                const imagePromises = [file1, file2, file3]
+                    .filter(file => file)
+                    .map(async (file) => {
+                        const base64Data = await fileToBase64(file);
+                        return { inlineData: { mimeType: file.type, data: base64Data } };
+                    });
+                
+                const imageParts = await Promise.all(imagePromises);
+                parts.push(...imageParts);
+
+                const payload = {
+                    contents: [{ parts: parts }],
+                    generationConfig: { responseModalities: ['IMAGE'] },
+                };
+
+                const response = await fetchWithExponentialBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    let errorDetails = `HTTP error! status: ${response.status}`;
+                    try {
+                        const errorData = await response.json();
+                        errorDetails += ` - ${errorData.error?.message || 'Unknown API Error'}`; 
+                    } catch (e) {
+                        errorDetails += " - Server returned a non-JSON error or empty response body.";
+                    }
+                    throw new Error(errorDetails);
+                }
+
+                const result = await response.json();
+                const base64DataImage = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+
+                if (base64DataImage) {
+                    const imageUrl = `data:image/png;base64,${base64DataImage}`;
+                    outputImage.src = imageUrl;
+                    outputImage.classList.remove('hidden');
+                    downloadBtn.classList.remove('hidden');
+                } else {
+                    showMessage('Gagal menghasilkan gambar dari API. Coba prompt atau gambar yang berbeda.', 'error');
+                    placeholder.classList.remove('hidden');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage(`Terjadi kesalahan: ${error.message}`, 'error');
+                placeholder.classList.remove('hidden');
+            } finally {
+                loading.classList.add('hidden');
+                generateBtn.disabled = false;
+            }
+        });
+        
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.href = outputImage.src;
+            link.download = 'hasil-transformasi.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    </script>
+</body>
+</html>
