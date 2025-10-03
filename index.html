@@ -150,6 +150,11 @@
                     </div>
 
                     <div>
+                        <label for="promptSearch" class="block text-sm font-medium text-gray-300 mb-2">Cari Template Prompt</label>
+                        <input type="text" id="promptSearch" placeholder="Ketik untuk mencari prompt..." class="w-full p-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-700 text-gray-200 mb-3">
+                    </div>
+
+                    <div>
                         <label for="promptSelector" class="block text-sm font-medium text-gray-300 mb-2">Pilih Template Prompt (Opsional)</label>
                         <select id="promptSelector" class="w-full p-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-700 text-gray-200">
                             <option value="">-- Pilih atau tulis manual di bawah --</option>
@@ -219,6 +224,7 @@
         const downloadBtn = document.getElementById('downloadBtn');
         const promptSelector = document.getElementById('promptSelector');
         const apiKeyInput = document.getElementById('apiKeyInput'); // New element
+        // const promptSearch = document.getElementById('promptSearch'); // Search input - moved to after DOM load
 
         // --- Prompt Database (Total 230 Prompts, Dikelompokkan berdasarkan Tema) ---
         // Catatan: Gunakan (Uploaded Person) sebagai placeholder untuk subjek tunggal.
@@ -1568,7 +1574,40 @@
                 { title: "baby portrait vintage vintage", template: "Vintage-themed baby in knit bonnet peeking from blue blanket in stacked old suitcases. Props: globe, books, train, rocking horse. Nostalgic, adventurous atmosphere." },
                 { title: "baby spongebob whimsical imut", template: "Cheerful child with curly hair and yellow bow in yellow outfit, holding plush Spongebob toy. Spongebob-themed background: pineapple house, coral, sandy floor, Bikini Bottom style. Use reference for face." },
                 { title: "baby candid studio putih", template: "Candid studio shot of child laughing reaching for iridescent soap bubbles, clean white background, pure joy frozen. Face (from reference) identical." },
-                { title: "baby pastel studio bayi", template: "Cute and adorable gender-neutral child sitting on fluffy white cloud, wearing stylish white knit crop top and baggy pants, dreamy studio pastel aesthetic, warm sunlight, playful innocence." }
+                { title: "baby pastel studio bayi", template: "Cute and adorable gender-neutral child sitting on fluffy white cloud, wearing stylish white knit crop top and baggy pants, dreamy studio pastel aesthetic, warm sunlight, playful innocence." },
+                { title: "baby teddy bear lavender", template: "Charming baby in elegant lavender gown with ruffled sleeves and lace details, wearing matching lavender headband with large bow. Baby sitting beside fluffy white teddy bear with blue ears and paws, gentle hands resting on teddy. Soft brown curtain background with multicolored bokeh fairy lights creating dreamy festive ambiance. Warm diffused lighting, tender and innocent mood." },
+                { title: "baby princess teddy studio", template: "Adorable baby princess in pastel pink dress with matching headband, sitting with white and pink teddy bear. Soft studio lighting, dreamy background with floating hearts and sparkles. Gentle and magical atmosphere, perfect for special occasions." },
+                { title: "baby vintage teddy bear", template: "Vintage-style baby portrait with classic teddy bear. Baby in cream-colored vintage outfit, sitting with antique brown teddy bear. Warm sepia tones, soft lighting, nostalgic and timeless feel. Props include vintage toys and books." },
+                { title: "baby rainbow teddy magical", template: "Magical baby portrait with rainbow teddy bear. Baby in white outfit, sitting with colorful rainbow-striped teddy bear. Background with floating rainbow orbs and sparkles. Bright, cheerful lighting, whimsical and joyful atmosphere." },
+                { title: "baby golden hour teddy", template: "Golden hour baby portrait with teddy bear. Baby in soft yellow outfit, sitting with golden teddy bear. Warm golden lighting streaming through window, creating soft shadows and highlights. Cozy and peaceful atmosphere." },
+                { title: "baby floral teddy garden", template: "Garden-themed baby portrait with flower-adorned teddy bear. Baby in floral dress, sitting with teddy bear decorated with fresh flowers. Natural garden background with blooming flowers, soft natural lighting, fresh and organic feel." },
+                { title: "baby winter teddy cozy", template: "Cozy winter baby portrait with snowman teddy bear. Baby in warm winter outfit, sitting with white snowman teddy bear. Soft winter lighting, warm and cozy atmosphere with snowflakes and winter decorations." },
+                { title: "baby ocean teddy beach", template: "Beach-themed baby portrait with sailor teddy bear. Baby in nautical outfit, sitting with sailor teddy bear. Ocean background with gentle waves, soft beach lighting, fresh and summery atmosphere." },
+                { title: "baby fairy teddy enchanted", template: "Enchanted fairy baby portrait with magical teddy bear. Baby in fairy costume with wings, sitting with sparkly teddy bear. Magical forest background with twinkling lights, ethereal and mystical atmosphere." },
+                { title: "baby superhero costume adventure", template: "Adorable baby dressed as tiny superhero in colorful cape and mask, sitting with action figure toys. Dynamic studio lighting, comic book style background, heroic and playful atmosphere." },
+                { title: "baby chef cooking kitchen", template: "Cute baby in miniature chef hat and apron, sitting in tiny kitchen with toy cooking utensils. Warm kitchen lighting, playful cooking props, adorable and culinary-themed." },
+                { title: "baby astronaut space adventure", template: "Baby in astronaut costume with helmet, sitting with rocket ship toys and space-themed props. Dark space background with stars, cosmic lighting, adventurous and dreamy." },
+                { title: "baby princess crown royal", template: "Baby princess in sparkly crown and elegant dress, sitting on tiny throne with royal scepter. Palace background with golden decorations, regal and majestic atmosphere." },
+                { title: "baby doctor medical cute", template: "Baby in doctor costume with stethoscope, sitting with medical toy kit and plush patients. Clean white background, professional yet adorable medical theme." },
+                { title: "baby firefighter hero brave", template: "Baby firefighter in red helmet and uniform, sitting with fire truck toys and safety props. Bright red and yellow colors, heroic and brave atmosphere." },
+                { title: "baby ballerina dance graceful", template: "Baby ballerina in pink tutu and ballet shoes, sitting in graceful pose with music box. Soft pink lighting, elegant dance studio background, graceful and artistic." },
+                { title: "baby pirate adventure ocean", template: "Baby pirate with eye patch and pirate hat, sitting with treasure chest and toy ship. Ocean background with waves, adventurous and swashbuckling theme." },
+                { title: "baby farmer garden cute", template: "Baby farmer in overalls and straw hat, sitting with toy vegetables and farm animals. Garden background with flowers, wholesome and natural atmosphere." },
+                { title: "baby pilot airplane sky", template: "Baby pilot in aviator hat and goggles, sitting with toy airplane and clouds. Sky blue background with fluffy clouds, adventurous and soaring theme." },
+                { title: "baby mermaid ocean magical", template: "Baby mermaid in shimmering tail and seashell crown, sitting with ocean creatures and pearls. Underwater background with coral, magical and enchanting." },
+                { title: "baby cowboy western adventure", template: "Baby cowboy in hat and boots, sitting with toy horse and lasso. Desert background with cacti, wild west adventure theme." },
+                { title: "baby unicorn magical fantasy", template: "Baby with unicorn horn and rainbow mane, sitting with magical unicorn toys. Pastel rainbow background, fantastical and dreamy atmosphere." },
+                { title: "baby dinosaur prehistoric cute", template: "Baby in dinosaur costume with tail, sitting with dinosaur toys and prehistoric plants. Jungle background, prehistoric adventure theme." },
+                { title: "baby angel heavenly pure", template: "Baby angel with tiny wings and halo, sitting on cloud with heavenly props. Soft white and gold lighting, pure and celestial atmosphere." },
+                { title: "baby ninja martial arts", template: "Baby ninja in black outfit and headband, sitting in martial arts pose with toy weapons. Dojo background, disciplined and adventurous theme." },
+                { title: "baby bee garden sweet", template: "Baby in bee costume with antennae, sitting with flowers and honey pot. Garden background with buzzing bees, sweet and natural theme." },
+                { title: "baby butterfly garden colorful", template: "Baby with butterfly wings and antennae, sitting among flowers and butterflies. Colorful garden background, vibrant and joyful atmosphere." },
+                { title: "baby elephant circus fun", template: "Baby in elephant costume with trunk, sitting with circus toys and colorful props. Circus tent background, fun and entertaining theme." },
+                { title: "baby penguin arctic cute", template: "Baby penguin in black and white outfit, sitting with ice and snow props. Arctic background with snowflakes, cool and adorable theme." },
+                { title: "baby monkey jungle playful", template: "Baby in monkey costume with tail, sitting with banana and jungle vines. Tropical jungle background, playful and mischievous atmosphere." },
+                { title: "baby owl wise nocturnal", template: "Baby owl in feathered costume with big eyes, sitting with books and moon props. Night sky background with stars, wise and mysterious theme." },
+                { title: "baby ladybug garden lucky", template: "Baby ladybug in red and black spotted outfit, sitting with flowers and good luck charms. Garden background, lucky and cheerful atmosphere." },
+                { title: "baby dragon magical fantasy", template: "Baby dragon with tiny wings and scales, sitting with magical crystals and treasure. Fantasy castle background, magical and powerful theme." }
             ],
             "CONCEPTUAL & OUTDOOR": [
                 { title: "conceptual nostalgia gang cinematic", template: "Photograph meeting your childhood self in residential alley with mango tree. Adult leans on wall, child gazes in admiration. Warm, golden hour light for nostalgia. Replace both faces with reference, keep details and authenticity (pose, expression, clothing, accessories). 9:16 vertical, cinematic lens/lights, highly realistic skin (no smooth/beauty filter)." },
@@ -1745,6 +1784,60 @@
                 { title: "travel winter wonderland snowy", template: "Winter wonderland travel portrait. Snow-covered landscape, cozy cabin, warm clothing, soft winter light, magical and serene atmosphere." },
                 { title: "travel underwater diving marine", template: "Underwater diving travel portrait. Coral reef, marine life, diving equipment, blue ocean light, sense of exploration and wonder." },
                 { title: "travel road trip journey scenic", template: "Road trip journey travel portrait. Scenic highway, vintage car, luggage, golden hour lighting, sense of freedom and adventure on open road." }
+            ],
+            "WOMEN": [
+                { title: "women hijab pastel feminine", template: "Young Asian woman in white hijab and pink knitted beret, wearing soft pink knitted sweater. She holds a white Persian cat with blue eyes in her arms. Background features soft pink floral wallpaper with roses, tulips, and hearts. Props include yellow rose, brown teddy bear charm, and pink crossbody bag. Soft, feminine lighting with pastel color palette." },
+                { title: "women hijab modern bathroom", template: "Full-body portrait of young Asian woman in black hijab, black turtleneck, high-waisted beige wide-leg pants, and black pointed-toe flats. She wears clear-framed glasses and gently touches them with her left hand. Modern bathroom with cream subway tiles, white sink, and large gold-framed mirror reflecting her profile. Bright, even lighting, chic and elegant." },
+                { title: "women cafe hijab colorful", template: "Young Asian woman in black hijab, colorful patterned long-sleeved shirt with '12' on it, light grey wide-leg pants, and white sneakers, sitting at a round black table outdoors at a cafe. On the table: slice of chocolate cake, iced coffee. Neon sign 'MIDSUMMER' and wall lanterns in background. White pebbles on ground. Looking at camera. Casual, evening cafe atmosphere." },
+                { title: "women ocean diving board contemplative", template: "Young Asian woman in black hijab, black and grey athletic jersey with number '22', black pants, and black combat boots, sitting on light blue diving board over deep blue ocean. Dark sunglasses on hijab, hands clasped in lap, looking contemplatively at horizon. Clear blue sky, choppy ocean with whitecaps. Bright natural daylight, serene and isolated mood." },
+                { title: "women elegant evening gown", template: "Elegant woman in a flowing evening gown at a gala event, dramatic lighting, luxurious setting, confident pose, sophisticated and glamorous atmosphere." },
+                { title: "women professional office portrait", template: "Professional woman in a business suit, confident pose, modern office background, sharp focus, powerful and authoritative presence." },
+                { title: "women bohemian outdoor field", template: "Bohemian woman in a flowing dress, walking through a sunlit field, wildflowers, golden hour, dreamy atmosphere, free-spirited and natural." },
+                { title: "women urban street fashion", template: "Stylish woman in streetwear, urban alleyway background, graffiti, edgy lighting, contemporary vibe, confident and modern." },
+                { title: "women cozy home reading", template: "Woman reading a book by a window in a cozy home setting, warm natural light, comfortable attire, peaceful and intimate." },
+                { title: "women fitness gym dynamic", template: "Dynamic shot of a woman exercising in a modern gym, active pose, strong lighting, energetic mood, healthy and powerful." },
+                { title: "women artistic studio portrait", template: "Artistic studio portrait of a woman, creative lighting, minimalist background, expressive pose, artistic and sophisticated." },
+                { title: "women vintage retro style", template: "Woman in vintage retro attire, classic car background, nostalgic filter, warm tones, timeless and elegant." },
+                { title: "women beach sunset serene", template: "Serene woman on a beach at sunset, flowing dress, gentle waves, golden hour light, peaceful mood, romantic and ethereal." },
+                { title: "women culinary kitchen chef", template: "Woman as a chef in a professional kitchen, cooking, focused expression, warm kitchen lighting, passionate and skilled." },
+                { title: "women garden floral portrait", template: "Woman surrounded by blooming flowers in a garden, soft natural light, vibrant colors, ethereal, natural and beautiful." },
+                { title: "women futuristic cyberpunk city", template: "Woman in cyberpunk attire, neon-lit futuristic city background, dramatic lighting, high-tech aesthetic, edgy and modern." },
+                { title: "women minimalist white studio", template: "Minimalist studio portrait of a woman, simple white outfit, clean background, soft even lighting, pure and elegant." },
+                { title: "women adventurous mountain hike", template: "Woman hiking on a mountain trail, scenic vista background, activewear, natural light, adventurous spirit, strong and determined." },
+                { title: "women glamorous red carpet", template: "Glamorous woman on a red carpet, sparkling dress, paparazzi flashes, high-fashion event, celebrity and luxurious." },
+                { title: "women contemplative window rain", template: "Woman looking out a window on a rainy day, thoughtful expression, soft indoor light, cozy atmosphere, introspective and calm." },
+                { title: "women vibrant cultural festival", template: "Woman in traditional attire at a vibrant cultural festival, colorful decorations, joyful atmosphere, celebratory and cultural." },
+                { title: "women abstract artistic paint", template: "Woman with abstract paint splatters on her face and clothes, artistic studio, creative lighting, expressive, bold and creative." },
+                { title: "women serene yoga meditation", template: "Woman in a yoga pose, serene expression, tranquil natural setting (e.g., by a lake), soft light, peaceful and zen." },
+                { title: "women powerful business executive", template: "Powerful businesswoman in a boardroom, sharp suit, confident stance, modern office, professional lighting, authoritative and successful." },
+                { title: "women dreamy forest ethereal", template: "Woman in flowing white dress in an enchanted forest, dappled sunlight through trees, mystical atmosphere, ethereal and magical." }
+            ],
+            "HOME & ARCHITECTURE": [
+                { title: "home construction renovation modern", template: "Modern house renovation in progress. Red tile roof, grey concrete walls ready for finishing, decorative front porch with cream pillars and white canopy. Construction materials scattered around: red brick fragments, gravel, concrete blocks. Bright sunny day, clear blue sky. Transform this construction site into a beautiful modern home with proper finishing, landscaping, and architectural details." },
+                { title: "home exterior modern minimalist", template: "Modern minimalist house exterior. Clean white walls, large glass windows, flat roof, geometric design. Minimalist landscaping with concrete planters, gravel pathways, and strategic lighting. Contemporary and sleek aesthetic." },
+                { title: "home interior living room cozy", template: "Cozy modern living room interior. Neutral color palette, comfortable sofa, coffee table, large windows with natural light. Plants, books, and decorative elements. Warm and inviting atmosphere." },
+                { title: "home kitchen modern white", template: "Modern white kitchen design. White cabinets, marble countertops, stainless steel appliances, pendant lighting. Clean lines, minimalist aesthetic, bright and functional space." },
+                { title: "home bedroom master suite", template: "Master bedroom suite design. King-size bed with luxurious bedding, walk-in closet, en-suite bathroom. Neutral colors, soft lighting, elegant furniture. Calm and sophisticated atmosphere." },
+                { title: "home bathroom luxury spa", template: "Luxury spa-style bathroom. Freestanding bathtub, rain shower, marble surfaces, natural stone accents. Soft lighting, plants, candles. Relaxing and rejuvenating space." },
+                { title: "home garden landscaping tropical", template: "Tropical garden landscaping. Palm trees, colorful flowers, stone pathways, water features. Outdoor seating area, pergola, string lights. Lush and vibrant outdoor space." },
+                { title: "home facade traditional colonial", template: "Traditional colonial house facade. Symmetrical design, columns, shutters, front porch. Classic architecture with modern updates. Timeless and elegant appearance." },
+                { title: "home interior industrial loft", template: "Industrial loft interior design. Exposed brick walls, metal beams, concrete floors, large windows. Modern furniture, pendant lighting, urban aesthetic. Spacious and contemporary." },
+                { title: "home outdoor patio dining", template: "Outdoor patio dining area. Weather-resistant furniture, outdoor kitchen, pergola with string lights. Plants and flowers, comfortable seating. Perfect for entertaining." },
+                { title: "home staircase modern floating", template: "Modern floating staircase design. Glass railings, wooden steps, LED lighting underneath. Minimalist and elegant, connecting different levels of the home." },
+                { title: "home home office workspace", template: "Modern home office workspace. Standing desk, ergonomic chair, bookshelves, natural light. Plants, artwork, organized storage. Productive and inspiring environment." },
+                { title: "home dining room formal", template: "Formal dining room design. Large dining table, elegant chairs, chandelier, sideboard. Neutral colors, sophisticated lighting, artwork on walls. Perfect for entertaining guests." },
+                { title: "home kids bedroom playful", template: "Playful kids bedroom design. Bunk beds, colorful walls, storage solutions, play area. Fun decorations, soft lighting, safe and creative space for children." },
+                { title: "home garage modern organized", template: "Modern organized garage. Epoxy floor, wall storage systems, workbench, tool organization. Clean and functional space for cars and storage." },
+                { title: "home basement finished recreation", template: "Finished basement recreation room. Home theater, game area, bar, comfortable seating. Soundproofing, proper lighting, entertainment-focused design." },
+                { title: "home laundry room functional", template: "Functional laundry room design. Washer and dryer, folding station, storage cabinets, utility sink. Organized and efficient space for household tasks." },
+                { title: "home entryway foyer grand", template: "Grand entryway foyer design. Marble floors, chandelier, console table, mirror, coat closet. First impression space, elegant and welcoming." },
+                { title: "home library study room", template: "Home library study room. Floor-to-ceiling bookshelves, comfortable reading chair, desk, natural light. Cozy and intellectual atmosphere for reading and work." },
+                { title: "home wine cellar storage", template: "Wine cellar storage design. Climate control, wooden wine racks, tasting area, proper lighting. Sophisticated storage for wine collection." },
+                { title: "home gym fitness room", template: "Home gym fitness room. Mirrors, rubber flooring, equipment storage, ventilation. Motivational atmosphere for exercise and wellness." },
+                { title: "home outdoor pool area", template: "Outdoor pool area design. Swimming pool, deck chairs, outdoor shower, landscaping. Resort-style outdoor living space." },
+                { title: "home smart home technology", template: "Smart home technology integration. Automated lighting, security systems, climate control, entertainment systems. Modern and convenient living." },
+                { title: "home sustainable eco friendly", template: "Sustainable eco-friendly home design. Solar panels, rainwater collection, energy-efficient appliances, natural materials. Green and environmentally conscious living." },
+                { title: "home luxury penthouse view", template: "Luxury penthouse with city view. Floor-to-ceiling windows, modern furniture, high-end finishes, panoramic cityscape. Sophisticated urban living." }
             ]
         };
 
@@ -1857,13 +1950,73 @@
             }
         }
 
+        // --- Search Function ---
+        function filterPrompts(searchTerm) {
+            // Clear all options except the first one
+            promptSelector.innerHTML = '<option value="">-- Pilih atau tulis manual di bawah --</option>';
+            
+            if (searchTerm.trim() === '') {
+                // If search is empty, show all prompts
+                populatePrompts();
+                return;
+            }
+            
+            // Create a temporary filtered database
+            const filteredDatabase = [];
+            let currentIndex = 0;
+            
+            // Search through all prompts and build filtered database
+            for (const category in categorizedPrompts) {
+                const categoryPrompts = categorizedPrompts[category].filter(prompt => 
+                    prompt.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    prompt.template.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                
+                if (categoryPrompts.length > 0) {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = `${category} (${categoryPrompts.length})`;
+                    
+                    categoryPrompts.forEach(prompt => {
+                        const option = document.createElement('option');
+                        option.value = currentIndex;
+                        option.textContent = prompt.title;
+                        optgroup.appendChild(option);
+                        
+                        // Add to filtered database with correct index
+                        filteredDatabase[currentIndex] = {
+                            ...prompt,
+                            category: category,
+                            index: currentIndex
+                        };
+                        currentIndex++;
+                    });
+                    
+                    promptSelector.appendChild(optgroup);
+                }
+            }
+            
+            if (currentIndex === 0) {
+                const noResultsOption = document.createElement('option');
+                noResultsOption.value = "";
+                noResultsOption.textContent = "Tidak ada hasil ditemukan";
+                noResultsOption.disabled = true;
+                promptSelector.appendChild(noResultsOption);
+            }
+            
+            // Update the global promptDatabase for search results
+            window.filteredPromptDatabase = filteredDatabase;
+        }
 
         // Event listener for the dropdown to update the textarea
         promptSelector.addEventListener('change', () => {
             const selectedIndex = promptSelector.value;
             if (selectedIndex !== "") {
                 const index = parseInt(selectedIndex);
-                promptGuide.value = promptDatabase[index].template;
+                // Use filtered database if search is active, otherwise use full database
+                const database = window.filteredPromptDatabase || promptDatabase;
+                if (database[index]) {
+                    promptGuide.value = database[index].template;
+                }
             } else {
                 promptGuide.value = ""; // Clear textarea if the default option is selected
             }
@@ -1876,6 +2029,16 @@
         
         // Initial population of prompts
         populatePrompts();
+
+        // Get search input element after DOM is loaded
+        const promptSearch = document.getElementById('promptSearch');
+        
+        // Event listener for search input
+        if (promptSearch) {
+            promptSearch.addEventListener('input', (e) => {
+                filterPrompts(e.target.value);
+            });
+        }
 
         // Generate button click event listener
         generateBtn.addEventListener('click', async () => {
