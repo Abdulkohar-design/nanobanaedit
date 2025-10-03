@@ -79,13 +79,56 @@
             height: 100%;
             background: #262626;
         }
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border-left-color: #f97316;
-            animation: spin 1s ease infinite;
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .loading-text {
+            font-size: 1.1rem;
+            color: #f97316;
+            font-weight: 600;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 6px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-progress {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, #f97316, #fb923c);
+            border-radius: 10px;
+            animation: moveProgress 1.5s ease-in-out infinite;
+        }
+
+        .loading-emoji {
+            font-size: 2rem;
+            animation: bounce 0.6s ease infinite;
+        }
+
+        @keyframes moveProgress {
+            0% { left: -50%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -184,9 +227,13 @@
                            </svg>
                             Hasil akan ditampilkan di sini
                         </div>
-                        <div id="loading" class="text-center text-gray-400 hidden flex-col items-center">
-                            <div class="spinner mb-4"></div>
-                            <p>Sedang memproses gambar...</p>
+                        <div id="loading" class="loading-container hidden">
+                            <div class="loading-emoji">✨</div>
+                            <div class="loading-text">Sedang Membuat Sihir...</div>
+                            <div class="loading-bar">
+                                <div class="loading-progress"></div>
+                            </div>
+                            <div class="text-gray-400 mt-2 text-sm">Mohon tunggu sebentar ya...</div>
                         </div>
                         <img id="outputImage" class="rounded-lg w-full h-auto object-contain hidden">
                     </div>
@@ -210,6 +257,7 @@
                     JANGAN LUPA TRAKTIR KOPI BIAR SEMANGAT HIHIHI
                 </a>
             </div>
+            <!-- Import Photos feature removed per user request -->
         </div>
     </div>
 
@@ -1265,6 +1313,156 @@
                 {title: "VIRAL 2025 - Tech Influencer", template: "A portrait of (Uploaded Person) as tech influencer with social media tools and tech products. Tech influence aesthetic. **Face clearly visible**. --ar 3:4"},
                 {title: "VIRAL 2025 - Tech Entrepreneur", template: "A portrait of (Uploaded Person) as tech entrepreneur with business plans and startup environment. Tech entrepreneurship aesthetic. **Face clearly visible**. --ar 3:4"},
             ],
+            "Bayi & Balita (50 Prompts)": [
+                {title: "BAYI - Bayi Tidur di Boks", template: "A peaceful portrait of (Uploaded Person) as a sleeping baby in a white wooden crib with soft bedding. Gentle natural light streaming through sheer curtains. Peaceful nursery setting. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi Tertawa dengan Mainan", template: "A joyful portrait of (Uploaded Person) as a baby laughing while playing with colorful toys on a soft playmat. Bright, cheerful lighting. Natural baby expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi Mandi dengan Bebek", template: "A sweet portrait of (Uploaded Person) as a baby enjoying bath time with rubber ducks and bubbles. Warm bathroom lighting, playful atmosphere. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Boneka Teddy", template: "A cute portrait of (Uploaded Person) as a baby cuddling a soft teddy bear in a cozy nursery setting. Soft, warm lighting. Innocent expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Taman Bunga", template: "A beautiful portrait of (Uploaded Person) as a baby sitting among colorful flowers in a garden. Natural sunlight, springtime setting. Sweet baby smile. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Selimut Lembut", template: "A gentle portrait of (Uploaded Person) as a baby wrapped in a soft blanket. Minimalist studio setting with soft lighting. Peaceful sleeping expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Keranjang Rotan", template: "A charming portrait of (Uploaded Person) as a baby posed in a rustic woven basket with soft fabric lining. Natural light, vintage aesthetic. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Mahkota Bunga", template: "A delicate portrait of (Uploaded Person) as a baby wearing a crown of small flowers. Soft pastel background, dreamy lighting. Sweet expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Alam Terbuka", template: "A natural portrait of (Uploaded Person) as a baby exploring outdoors in a grassy meadow. Golden hour lighting, candid moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Kostum Lucu", template: "An adorable portrait of (Uploaded Person) as a baby wearing a cute animal costume. Studio setting with playful props. Happy baby expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Ayunan Taman", template: "A happy portrait of (Uploaded Person) as a baby enjoying a baby swing in a park. Natural daylight, outdoor setting. Joyful expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Buku Cerita", template: "A sweet portrait of (Uploaded Person) as a baby looking at a colorful storybook. Cozy reading nook setting, warm lighting. Curious expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Pantai", template: "A summery portrait of (Uploaded Person) as a baby playing in the sand at the beach. Sunset lighting, ocean background. Happy beach baby moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Balon", template: "A cheerful portrait of (Uploaded Person) as a baby holding colorful balloons. Bright studio setting, celebration theme. Delighted expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Kebun", template: "A natural portrait of (Uploaded Person) as a baby among vegetables in a garden. Soft morning light, organic setting. Curious baby exploration. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Piano", template: "A musical portrait of (Uploaded Person) as a baby touching piano keys. Elegant room setting, artistic lighting. Fascinated expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Kursi Tinggi", template: "A charming portrait of (Uploaded Person) as a baby sitting in a wooden high chair. Bright kitchen setting, mealtime moment. Happy expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Payung", template: "A whimsical portrait of (Uploaded Person) as a baby with a colorful umbrella. Studio setting with soft lighting. Playful baby moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Rumput", template: "A natural portrait of (Uploaded Person) as a baby lying on soft grass. Outdoor setting with dappled sunlight. Peaceful expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Mobil Mainan", template: "A fun portrait of (Uploaded Person) as a baby with a vintage toy car. Playroom setting, nostalgic lighting. Excited baby expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi Belajar Berjalan", template: "A milestone portrait of (Uploaded Person) as a baby taking first steps. Home setting with natural light. Determined expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Kucing", template: "A gentle portrait of (Uploaded Person) as a baby interacting with a soft cat. Cozy home setting, warm lighting. Gentle moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Kolam Renang", template: "A refreshing portrait of (Uploaded Person) as a baby enjoying a pool float. Bright outdoor pool setting. Happy water play moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Kamera", template: "A creative portrait of (Uploaded Person) as a baby holding a vintage camera. Studio setting with artistic lighting. Curious expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Perpustakaan", template: "An intellectual portrait of (Uploaded Person) as a baby surrounded by books. Library setting with warm lighting. Studious baby moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Gelembung", template: "A magical portrait of (Uploaded Person) as a baby watching soap bubbles. Soft backlit setting, dreamy atmosphere. Wonder-filled expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Studio Vintage", template: "A timeless portrait of (Uploaded Person) as a baby in vintage clothing. Antique studio setting, classic lighting. Old-world charm. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Bunga Matahari", template: "A sunny portrait of (Uploaded Person) as a baby near tall sunflowers. Natural outdoor setting, golden light. Happy summer moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Rumah Pohon", template: "An adventurous portrait of (Uploaded Person) as a baby in a treehouse setting. Natural woodland background. Exploratory expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Kue", template: "A celebratory portrait of (Uploaded Person) as a baby with a birthday cake. Party setting with festive lighting. Joyful moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Musim Dingin", template: "A cozy portrait of (Uploaded Person) as a baby in winter clothing. Snowy background, warm indoor lighting. Bundled up cuteness. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Alat Musik", template: "A musical portrait of (Uploaded Person) as a baby with various instruments. Music room setting, artistic lighting. Playful expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Dapur", template: "A culinary portrait of (Uploaded Person) as a baby in chef's hat. Kitchen setting with baking props. Messy fun expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Pesawat Kertas", template: "A creative portrait of (Uploaded Person) as a baby with paper airplanes. Bright playroom setting. Imaginative moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Hammock", template: "A relaxing portrait of (Uploaded Person) as a baby in a garden hammock. Peaceful outdoor setting, dappled light. Serene expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Robot", template: "A modern portrait of (Uploaded Person) as a baby with robot toys. Futuristic playroom setting. Curious tech exploration. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Kebun Binatang", template: "An adventurous portrait of (Uploaded Person) as a baby watching animals. Zoo setting with natural light. Amazed expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Crayon", template: "An artistic portrait of (Uploaded Person) as a baby with colorful crayons. Art room setting, creative lighting. Expressive moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Studio Modern", template: "A contemporary portrait of (Uploaded Person) as a baby in minimalist setting. Clean studio background, professional lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Mainan Edukasi", template: "An educational portrait of (Uploaded Person) as a baby with learning toys. Bright playroom setting. Engaged expression. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Taman Bermain", template: "A playful portrait of (Uploaded Person) as a baby at a playground. Colorful outdoor setting, natural light. Happy play moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Buah-buahan", template: "A healthy portrait of (Uploaded Person) as a baby with fresh fruits. Bright kitchen setting, natural styling. Curious food exploration. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Studio Hitam Putih", template: "A classic portrait of (Uploaded Person) as a baby in black and white. Timeless studio setting, dramatic lighting. Expressive moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Mainan Kayu", template: "A natural portrait of (Uploaded Person) as a baby with wooden toys. Montessori-style setting, warm lighting. Educational play moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Rumah Kaca", template: "A botanical portrait of (Uploaded Person) as a baby in a greenhouse. Plant-filled setting, diffused light. Nature exploration moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Bintang", template: "A dreamy portrait of (Uploaded Person) as a baby with star decorations. Night nursery setting, soft lighting. Magical moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Studio Artistik", template: "An artistic portrait of (Uploaded Person) as a baby with creative props. Unique studio setting, dramatic lighting. Stylized moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Kereta", template: "A nostalgic portrait of (Uploaded Person) as a baby in vintage wagon. Garden setting, golden hour light. Classic childhood moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Ruang Seni", template: "A creative portrait of (Uploaded Person) as a baby in art studio. Paint-splattered setting, artistic lighting. Expressive moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Hujan", template: "A whimsical portrait of (Uploaded Person) as a baby watching rain. Indoor setting with window, moody lighting. Contemplative moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi di Studio Fantasy", template: "A magical portrait of (Uploaded Person) as a baby in fairytale setting. Enchanted forest backdrop, ethereal lighting. Dreamy moment. **Face clearly visible**. --ar 3:4"},
+                {title: "BAYI - Bayi dengan Pelangi", template: "A colorful portrait of (Uploaded Person) as a baby with rainbow elements. Bright studio setting, prismatic lighting. Joyful moment. **Face clearly visible**. --ar 3:4"}
+            ],
+            "Romantis & Valentine (30 Prompts)": [
+                {title: "ROMANTIS - Kencan di Restoran Mewah", template: "A romantic portrait of (Uploaded Person) during an elegant dinner date at a luxury restaurant. Soft candlelight, sophisticated ambiance. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Piknik di Taman Bunga", template: "A sweet portrait of (Uploaded Person) having a romantic picnic in a blooming flower garden. Golden hour lighting, dreamy atmosphere. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Sunset di Pantai", template: "A romantic portrait of (Uploaded Person) walking along the beach at sunset. Golden light, ocean waves, peaceful setting. **Face clearly visible**. --ar 16:9"},
+                {title: "ROMANTIS - Kota Paris", template: "A romantic portrait of (Uploaded Person) in front of the Eiffel Tower in Paris. Evening lights, romantic city atmosphere. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Gondola di Venice", template: "A romantic portrait of (Uploaded Person) on a gondola ride in Venice. Sunset lighting, historic canal setting. **Face clearly visible**. --ar 16:9"},
+                {title: "ROMANTIS - Taman Sakura", template: "A romantic portrait of (Uploaded Person) under blooming cherry blossoms. Soft pink petals falling, dreamy spring setting. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Coffee Shop Date", template: "A cozy portrait of (Uploaded Person) at a charming cafe. Warm lighting, intimate coffee date setting. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Rooftop Bar", template: "A stylish portrait of (Uploaded Person) at a rooftop bar with city lights. Evening ambiance, urban romance. **Face clearly visible**. --ar 16:9"},
+                {title: "ROMANTIS - Danau dengan Angsa", template: "A peaceful portrait of (Uploaded Person) by a lake with swans. Misty morning light, romantic nature setting. **Face clearly visible**. --ar 16:9"},
+                {title: "ROMANTIS - Taman Mawar", template: "A romantic portrait of (Uploaded Person) in a rose garden. Red roses, elegant garden setting. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Stargazing Malam", template: "A magical portrait of (Uploaded Person) stargazing on a clear night. Milky Way backdrop, romantic evening. **Face clearly visible**. --ar 16:9"},
+                {title: "ROMANTIS - Ballroom Dance", template: "An elegant portrait of (Uploaded Person) dancing in a grand ballroom. Crystal chandeliers, formal evening setting. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Hot Air Balloon", template: "An adventurous portrait of (Uploaded Person) in a hot air balloon. Sunset sky, romantic flying experience. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Wine Tasting", template: "A sophisticated portrait of (Uploaded Person) at a vineyard wine tasting. Golden hour light, romantic wine country setting. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Ice Skating", template: "A playful portrait of (Uploaded Person) ice skating. Winter wonderland setting, romantic holiday atmosphere. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Garden Party", template: "An enchanting portrait of (Uploaded Person) at an elegant garden party. String lights, romantic evening celebration. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Mountain Sunset", template: "A breathtaking portrait of (Uploaded Person) watching sunset from a mountain peak. Epic views, romantic adventure. **Face clearly visible**. --ar 16:9"},
+                {title: "ROMANTIS - Yacht Date", template: "A luxurious portrait of (Uploaded Person) on a private yacht. Ocean sunset, exclusive romantic setting. **Face clearly visible**. --ar 16:9"},
+                {title: "ROMANTIS - Forest Picnic", template: "A magical portrait of (Uploaded Person) having a picnic in an enchanted forest. Dappled sunlight, fairy tale setting. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Concert Date", template: "An exciting portrait of (Uploaded Person) at a romantic concert. Stage lights, music venue atmosphere. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Lavender Field", template: "A dreamy portrait of (Uploaded Person) in a purple lavender field. Sunset light, Provence-inspired setting. **Face clearly visible**. --ar 16:9"},
+                {title: "ROMANTIS - Christmas Market", template: "A festive portrait of (Uploaded Person) at a Christmas market. Holiday lights, romantic winter setting. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Botanical Garden", template: "A lush portrait of (Uploaded Person) in a tropical botanical garden. Exotic flowers, romantic greenhouse setting. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Lakeside Cabin", template: "A cozy portrait of (Uploaded Person) at a romantic lakeside cabin. Warm firelight, rustic setting. **Face clearly visible**. --ar 16:9"},
+                {title: "ROMANTIS - Theater Box", template: "An elegant portrait of (Uploaded Person) in a private theater box. Opera house setting, classic romance. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Art Gallery", template: "A cultured portrait of (Uploaded Person) at an art gallery opening. Modern art, sophisticated date night. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Ferris Wheel", template: "A playful portrait of (Uploaded Person) on a Ferris wheel at night. Carnival lights, romantic fair setting. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Historic Castle", template: "A regal portrait of (Uploaded Person) exploring a historic castle. Medieval architecture, romantic old-world setting. **Face clearly visible**. --ar 16:9"},
+                {title: "ROMANTIS - Rain Kiss", template: "A cinematic portrait of (Uploaded Person) in the rain. City lights, romantic movie moment. **Face clearly visible**. --ar 3:4"},
+                {title: "ROMANTIS - Secret Garden", template: "A mysterious portrait of (Uploaded Person) in a hidden garden. Overgrown roses, romantic secret spot. **Face clearly visible**. --ar 3:4"}
+            ],
+            "Makanan & Minuman (30 Prompts)": [
+                {title: "KULINER - Food Blogger Review", template: "A professional portrait of (Uploaded Person) as a food blogger reviewing a gourmet dish. Restaurant setting, food photography lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Coffee Art", template: "An artistic portrait of (Uploaded Person) creating latte art. Cafe setting, morning light. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Chef di Dapur", template: "A dynamic portrait of (Uploaded Person) as a chef in a professional kitchen. Cooking action, restaurant atmosphere. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Food Photography", template: "A creative portrait of (Uploaded Person) taking photos of beautifully plated food. Studio lighting, professional setup. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Wine Sommelier", template: "An elegant portrait of (Uploaded Person) as a wine sommelier. Wine cellar setting, sophisticated lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Street Food", template: "A vibrant portrait of (Uploaded Person) enjoying street food. Night market setting, neon lights. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Dessert Plating", template: "A detailed portrait of (Uploaded Person) plating a beautiful dessert. Pastry kitchen, artistic presentation. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Cocktail Mixologist", template: "A stylish portrait of (Uploaded Person) as a cocktail mixologist. Bar setting, dramatic lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Organic Farm", template: "A natural portrait of (Uploaded Person) harvesting fresh produce. Farm setting, morning light. **Face clearly visible**. --ar 16:9"},
+                {title: "KULINER - Sushi Chef", template: "A precise portrait of (Uploaded Person) as a sushi chef. Japanese restaurant setting, clean lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - BBQ Master", template: "A smoky portrait of (Uploaded Person) as a BBQ pitmaster. Outdoor grilling, dramatic lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Bread Baker", template: "A warm portrait of (Uploaded Person) as an artisan baker. Bakery setting, morning atmosphere. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Food Stylist", template: "An artistic portrait of (Uploaded Person) as a food stylist. Photo studio setting, professional lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Ice Cream Artist", template: "A fun portrait of (Uploaded Person) creating artisanal ice cream. Gelato shop setting, colorful presentation. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Farmers Market", template: "A vibrant portrait of (Uploaded Person) shopping at a farmers market. Morning light, fresh produce. **Face clearly visible**. --ar 16:9"},
+                {title: "KULINER - Pizza Chef", template: "An energetic portrait of (Uploaded Person) tossing pizza dough. Italian restaurant setting, warm lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Chocolate Artisan", template: "A detailed portrait of (Uploaded Person) working with fine chocolate. Chocolatier workshop, artistic lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Tea Master", template: "A serene portrait of (Uploaded Person) performing a tea ceremony. Traditional tea room setting, natural light. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Food Truck", template: "A casual portrait of (Uploaded Person) running a food truck. Urban setting, street atmosphere. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Spice Market", template: "A colorful portrait of (Uploaded Person) at a spice market. Traditional market setting, vibrant displays. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Craft Beer", template: "A contemporary portrait of (Uploaded Person) brewing craft beer. Microbrewery setting, industrial lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Cheese Monger", template: "A sophisticated portrait of (Uploaded Person) as a cheese expert. Cheese shop setting, warm lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Rooftop Garden", template: "An urban portrait of (Uploaded Person) harvesting from a rooftop garden. City views, natural light. **Face clearly visible**. --ar 16:9"},
+                {title: "KULINER - Dim Sum Chef", template: "A skilled portrait of (Uploaded Person) making dim sum. Chinese kitchen setting, steam atmosphere. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Food Science", template: "A technical portrait of (Uploaded Person) in food science research. Laboratory setting, clean lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Cooking Class", template: "An educational portrait of (Uploaded Person) teaching a cooking class. Teaching kitchen setting, demonstration lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Restaurant Review", template: "A professional portrait of (Uploaded Person) as a restaurant critic. Fine dining setting, subtle lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Herb Garden", template: "A fresh portrait of (Uploaded Person) in an herb garden. Garden setting, morning dew. **Face clearly visible**. --ar 3:4"},
+                {title: "KULINER - Food Festival", template: "A festive portrait of (Uploaded Person) at a food festival. Outdoor event, celebratory atmosphere. **Face clearly visible**. --ar 16:9"},
+                {title: "KULINER - Meal Prep", template: "An organized portrait of (Uploaded Person) doing meal preparation. Modern kitchen setting, clean lighting. **Face clearly visible**. --ar 3:4"}
+            ],
+            "Studio Fashion (30 Prompts)": [
+                {title: "FASHION - High Fashion Editorial", template: "A striking editorial portrait of (Uploaded Person) in avant-garde fashion. Studio lighting, high-end fashion magazine style. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Minimalist Style", template: "A clean portrait of (Uploaded Person) in minimalist fashion. White studio background, modern aesthetic. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Streetwear", template: "An urban portrait of (Uploaded Person) in trendy streetwear. Industrial setting, edgy lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Vintage Glamour", template: "A glamorous portrait of (Uploaded Person) in vintage fashion. Classic Hollywood lighting, retro style. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Contemporary Chic", template: "A sophisticated portrait of (Uploaded Person) in contemporary fashion. Clean studio setting, elegant lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Runway Look", template: "A dynamic portrait of (Uploaded Person) in runway fashion. Fashion show lighting, catwalk pose. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Studio Dramatic", template: "A dramatic portrait of (Uploaded Person) with bold fashion styling. Dark studio setting, theatrical lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Casual Elegance", template: "A relaxed portrait of (Uploaded Person) in smart casual wear. Natural studio lighting, lifestyle pose. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Luxury Brand", template: "A luxurious portrait of (Uploaded Person) in designer fashion. Premium studio setting, professional lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Urban Style", template: "A cool portrait of (Uploaded Person) in urban fashion. City studio backdrop, modern lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Art Fashion", template: "An artistic portrait of (Uploaded Person) in avant-garde clothing. Creative studio setup, artistic lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Classic Portrait", template: "A timeless portrait of (Uploaded Person) in classic fashion. Traditional studio setting, elegant lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Modern Minimal", template: "A sleek portrait of (Uploaded Person) in minimal fashion. Clean studio backdrop, contemporary lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Fashion Week", template: "A high-energy portrait of (Uploaded Person) in fashion week style. Backstage atmosphere, dynamic lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Studio Noir", template: "A moody portrait of (Uploaded Person) in dark fashion. Film noir lighting, dramatic shadows. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Elegant Evening", template: "A sophisticated portrait of (Uploaded Person) in evening wear. Luxury studio setting, glamorous lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Studio Color", template: "A colorful portrait of (Uploaded Person) with bold fashion colors. Vibrant studio backdrop, creative lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Fashion Editorial", template: "A magazine-style portrait of (Uploaded Person) in editorial fashion. Professional studio setting, fashion lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Studio Light", template: "A bright portrait of (Uploaded Person) with high-key lighting. White studio setup, clean fashion style. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Fashion Art", template: "An artistic portrait of (Uploaded Person) with fashion as art. Creative studio backdrop, artistic lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Studio Classic", template: "A classic portrait of (Uploaded Person) in timeless fashion. Traditional studio lighting, elegant pose. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Modern Edge", template: "An edgy portrait of (Uploaded Person) in contemporary fashion. Modern studio setting, dramatic lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Fashion Future", template: "A futuristic portrait of (Uploaded Person) in avant-garde style. High-tech studio setting, innovative lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Studio Drama", template: "A theatrical portrait of (Uploaded Person) in dramatic fashion. Dark studio backdrop, spotlight lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Fashion Minimal", template: "A minimalist portrait of (Uploaded Person) in clean fashion. Simple studio setting, precise lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Studio Glam", template: "A glamorous portrait of (Uploaded Person) in luxury fashion. Premium studio backdrop, professional lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Fashion Story", template: "A narrative portrait of (Uploaded Person) telling a fashion story. Editorial studio setting, atmospheric lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Studio Modern", template: "A modern portrait of (Uploaded Person) in contemporary style. Clean studio backdrop, innovative lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Fashion Bold", template: "A bold portrait of (Uploaded Person) with strong fashion statement. Dramatic studio setting, contrasting lighting. **Face clearly visible**. --ar 3:4"},
+                {title: "FASHION - Studio Elegance", template: "An elegant portrait of (Uploaded Person) in refined fashion. Luxury studio setup, sophisticated lighting. **Face clearly visible**. --ar 3:4"}
+            ],
             "Anak-Anak & Aktivitas Sekolah (50 Prompts)": [
                 {title: "ANAK - Bermain di Taman", template: "A joyful portrait of (Uploaded Person) as a child playing in a colorful playground with swings, slides, and other playground equipment. Bright, happy atmosphere with natural lighting. **Face clearly visible**. --ar 3:4"},
                 {title: "ANAK - Di Kelas Sekolah", template: "A portrait of (Uploaded Person) as a student sitting at a school desk with books, pencils, and educational materials. Classroom setting with bright lighting. **Face clearly visible**. --ar 3:4"},
@@ -1533,45 +1731,45 @@
                 { title: "family tidur di tempat tidur indoor", template: "Sleeping family in bedroom. Parents and children sleeping peacefully in large bed, soft blankets and pillows. Nightlight casting warm glow, dreamy atmosphere, shallow depth of field." }
             ],
             "STUDIO": [
-                { title: "studio asia portrait close-up", template: "Create a striking close-up portrait of a young Asian individual, using the face from the reference image. They are wearing round glasses and a dark grey coat. The background is a solid, deep red. Use dramatic, focused lighting to create strong shadows and highlights, capturing a serious and contemplative expression. Ensure high facial fidelity and seamless integration into this artistic studio setting, with textured skin for realism." },
-                { title: "studio butterfly flower mode", template: "Create a high-fashion editorial waist-up portrait in a 4x5 Instagram ratio, using the attached image as the subject. The model's skin should appear glowing and luminous, with a subtle shimmer body glitter effect under professional studio lighting. Makeup dreamy, pastel pink gown, white butterflies, lush pink and white flowers." },
-                { title: "studio kacamata asia red", template: "Generate an intense close-up portrait of a young Asian individual, with their face based on the reference, looking directly at the camera with a confident gaze. Wearing a black suit jacket, dark t-shirt, and round glasses. Background is solid, vibrant red, dramatic hue. Strong colored lighting, moody and powerful with sharp highlights. High facial fidelity, bold and high-impact studio shot, textured skin." },
-                { title: "studio hijab studio orange", template: "Editorial-style, cinematic close-up portrait of a slender young woman, using user's face as reference. Shot from a very low angle with chin tilted up, direct gaze, subtle smirk. Attire: dark blazer, black turtleneck, sleek black hijab. Studio with vibrant orange background. Dual-tone cinematic lighting (warm orange and cool blue). 85mm lens, f/4, ISO 100, 1/200s." },
-                { title: "studio fashion black merah", template: "Produce a cinematic portrait of a young adult in off-shoulder black outfit, holding a single red rose. Gazing slightly upward with dreamy, thoughtful expression. Circular spotlight behind them for dramatic shadow. Ultra HD, sharp details, cinematic fashion photography aesthetic." },
-                { title: "studio kacamata black closeup", template: "Create a straightforward, neutral close-up portrait of a young Asian individual, using the face from the provided reference. Wearing black turtleneck, dark grey coat, round glasses, calm expression. Plain, light grey wall background. Soft, even, natural lighting focused on facial details. High facial fidelity and clean aesthetic." },
-                { title: "studio mode black fashion", template: "Black and white editorial fashion photo: young adult sits on folding chair in studio wearing black turtleneck, oversized wide-leg black pants, boots, chain accessory. Strong directional light for dramatic shadow of profile. Minimal, high-fashion look. Replace subject's face with upload, keeping details and expression." },
-                { title: "studio portrait kursi hitam", template: "Thoughtful close-up portrait of a young Asian individual, face from reference, sitting with arm on back of chair. Tan corduroy jacket, dark top, round glasses, black smartwatch, hand on chin in pensive pose. Background solid dark grey. Soft, controlled lighting for highlights." },
-                { title: "studio potret merah black", template: "Dramatic studio portrait: person in black blazer, leaning back on chair against glowing red background, head tilted, eyes closed, intense emotion. Contrast black blazer and red backdrop. Cinematic, edgy, fashion-forward. Match photo as closely as possible; preserve face realism." },
-                { title: "studio fashion portrait korduroi", template: "Editorial 3x3 photo grid in minimal, cream/beige studio. Reference image as model: rust orange corduroy shirt, beige trousers, white sneakers, messy comma hair. Mix of poses: full-body, medium, tight close-ups, some black & white. Soft/diffused lighting, warm color grade." },
+                { title: "studio potret asia close-up", template: "Create a striking close-up portrait of a young Asian individual, using the face from the reference image. They are wearing round glasses and a dark grey coat. The background is a solid, deep red. Use dramatic, focused lighting to create strong shadows and highlights, capturing a serious and contemplative expression. Ensure high facial fidelity and seamless integration into this artistic studio setting, with textured skin for realism." },
+                { title: "studio kupu-kupu bunga mode", template: "Create a high-fashion editorial waist-up portrait in a 4x5 Instagram ratio, using the attached image as the subject. The model's skin should appear glowing and luminous, with a subtle shimmer body glitter effect under professional studio lighting. Makeup dreamy, pastel pink gown, white butterflies, lush pink and white flowers." },
+                { title: "studio kacamata asia merah", template: "Generate an intense close-up portrait of a young Asian individual, with their face based on the reference, looking directly at the camera with a confident gaze. Wearing a black suit jacket, dark t-shirt, and round glasses. Background is solid, vibrant red, dramatic hue. Strong colored lighting, moody and powerful with sharp highlights. High facial fidelity, bold and high-impact studio shot, textured skin." },
+                { title: "studio hijab studio oranye", template: "Editorial-style, cinematic close-up portrait of a slender young woman, using user's face as reference. Shot from a very low angle with chin tilted up, direct gaze, subtle smirk. Attire: dark blazer, black turtleneck, sleek black hijab. Studio with vibrant orange background. Dual-tone cinematic lighting (warm orange and cool blue). 85mm lens, f/4, ISO 100, 1/200s." },
+                { title: "studio fashion hitam merah", template: "Produce a cinematic portrait of a young adult in off-shoulder black outfit, holding a single red rose. Gazing slightly upward with dreamy, thoughtful expression. Circular spotlight behind them for dramatic shadow. Ultra HD, sharp details, cinematic fashion photography aesthetic." },
+                { title: "studio kacamata hitam closeup", template: "Create a straightforward, neutral close-up portrait of a young Asian individual, using the face from the provided reference. Wearing black turtleneck, dark grey coat, round glasses, calm expression. Plain, light grey wall background. Soft, even, natural lighting focused on facial details. High facial fidelity and clean aesthetic." },
+                { title: "studio mode hitam fashion", template: "Black and white editorial fashion photo: young adult sits on folding chair in studio wearing black turtleneck, oversized wide-leg black pants, boots, chain accessory. Strong directional light for dramatic shadow of profile. Minimal, high-fashion look. Replace subject's face with upload, keeping details and expression." },
+                { title: "studio potret kursi hitam", template: "Thoughtful close-up portrait of a young Asian individual, face from reference, sitting with arm on back of chair. Tan corduroy jacket, dark top, round glasses, black smartwatch, hand on chin in pensive pose. Background solid dark grey. Soft, controlled lighting for highlights." },
+                { title: "studio potret merah hitam", template: "Dramatic studio portrait: person in black blazer, leaning back on chair against glowing red background, head tilted, eyes closed, intense emotion. Contrast black blazer and red backdrop. Cinematic, edgy, fashion-forward. Match photo as closely as possible; preserve face realism." },
+                { title: "studio fashion potret korduroi", template: "Editorial 3x3 photo grid in minimal, cream/beige studio. Reference image as model: rust orange corduroy shirt, beige trousers, white sneakers, messy comma hair. Mix of poses: full-body, medium, tight close-ups, some black & white. Soft/diffused lighting, warm color grade." },
                 { title: "studio minimalis wanita potret", template: "Photorealistic cinematic portrait of a young Indonesian woman sitting gracefully in a minimalist white studio. Loose white satin shirt, light beige pants, cream hijab, white sneakers. Soft, even lighting, symmetrical composition, natural and elegant." },
                 { title: "studio cozy orange", template: "A warm, cozy indoor portrait with orange knit sweater, holding a fluffy ginger cat looking at camera. Smiling gently. Softly lit, comfortable living space." },
                 { title: "studio fullbody coklat white", template: "Retro-themed full-body portrait: young Asian subject (from reference), sits casually on wooden desk. Brown leather jacket, bright pink t-shirt, cargo pants, black boots, headphones, glasses, leans on vintage computer monitor. Desk has clock, calendar. Plain light beige wall, soft lighting for '90s vibe." },
                 { title: "studio neon biru", template: "Cinematic portrait with vibrant blue neon lighting. Subject in dark outfit, intense gaze, shallow depth of field. Dramatic shadows and highlights, futuristic aesthetic." },
                 { title: "studio monokrom hitam putih", template: "High-contrast black and white studio portrait. Strong directional lighting creating dramatic shadows. Subject in dark clothing against light background, intense expression." },
                 { title: "studio pastel pink", template: "Soft pastel pink studio portrait. Subject in light-colored outfit, gentle lighting, dreamy atmosphere. Shallow depth of field, focus on facial features." },
-                { title: "studio industrial grey", template: "Industrial-themed studio with concrete textures and metal elements. Subject in edgy fashion, dramatic lighting, urban aesthetic." },
+                { title: "studio industrial abu-abu", template: "Industrial-themed studio with concrete textures and metal elements. Subject in edgy fashion, dramatic lighting, urban aesthetic." },
                 { title: "studio vintage sepia", template: "Vintage sepia-toned studio portrait. Subject in retro clothing, soft lighting, nostalgic atmosphere. Props like old books and vintage camera." },
-                { title: "studio futuristic silver", template: "Futuristic silver studio with reflective surfaces and sleek design. Subject in modern attire, cool lighting, sci-fi aesthetic." },
-                { title: "studio natural wood", template: "Natural wood-themed studio with warm tones and organic textures. Subject in earth-toned clothing, soft natural lighting, cozy atmosphere." }
+                { title: "studio futuristik perak", template: "Futuristic silver studio with reflective surfaces and sleek design. Subject in modern attire, cool lighting, sci-fi aesthetic." },
+                { title: "studio natural kayu", template: "Natural wood-themed studio with warm tones and organic textures. Subject in earth-toned clothing, soft natural lighting, cozy atmosphere." }
             ],
             "PET & BABY": [
-                { title: "pet hewan whimsical costume", template: "A charming cat, adorned in an adorable bee costume, sits gracefully on a vibrant yellow background. The costume features black and yellow stripes, tiny bee wings, and antennae. The cat has captivating blue eyes and looks slightly upwards. Around the cat, several bright yellow sunflowers and white daisies are arranged. A small glass jar of honey with a wooden dipper sits to the cat's left. The lighting is soft and even, highlighting textures and creating a delightful, whimsical atmosphere." },
-                { title: "pet kucing silver birthday", template: "Charming cat dressed in shimmering silver sequined gown, sitting upright before a small two-tiered birthday cake with lit '2' candle. Birthday scene against vibrant pink. Silver balloons spell out 'MOCHI' above; 'HAPPY BIRTHDAY' banner and confetti. Soft, even lighting." },
-                { title: "pet dog cute imut", template: "Cute dog in pink bathrobe, pink shower cap, heart-shaped sunglasses, lounging on pink sofa, under vintage hair dryer. Small pink towel with white paw prints in front. Pink/white checkered wallpaper background. Bright, playful lighting." },
-                { title: "pet kelinci lucu garden", template: "Adorable rabbit wearing tiny flower crown, sitting in blooming garden with butterflies. Soft pastel colors, dreamy atmosphere, shallow depth of field." },
-                { title: "pet burung beo colorful", template: "Colorful parrot wearing miniature pirate hat, perched on treasure chest with gold coins. Vibrant tropical background, playful lighting, detailed feathers." },
-                { title: "pet kuda pony princess", template: "Miniature pony with braided mane and glittery horn, wearing princess crown and saddle. Enchanted forest background with fairy lights, magical atmosphere." },
-                { title: "pet hamster kecil tiny", template: "Tiny hamster in miniature explorer outfit with backpack, standing on world map. Soft lighting, cute accessories, detailed fur texture." },
-                { title: "pet iguana reptil exotic", template: "Exotic iguana wearing tiny sunglasses and Hawaiian shirt, lounging on miniature beach chair. Tropical background with palm trees, vibrant colors." },
-                { title: "pet kelinci putih easter", template: "White rabbit wearing Easter bunny costume with basket of colorful eggs. Spring garden background with blooming flowers, soft pastel lighting." },
+                { title: "pet hewan kostum whimsical", template: "A charming cat, adorned in an adorable bee costume, sits gracefully on a vibrant yellow background. The costume features black and yellow stripes, tiny bee wings, and antennae. The cat has captivating blue eyes and looks slightly upwards. Around the cat, several bright yellow sunflowers and white daisies are arranged. A small glass jar of honey with a wooden dipper sits to the cat's left. The lighting is soft and even, highlighting textures and creating a delightful, whimsical atmosphere." },
+                { title: "pet kucing perak ulang tahun", template: "Charming cat dressed in shimmering silver sequined gown, sitting upright before a small two-tiered birthday cake with lit '2' candle. Birthday scene against vibrant pink. Silver balloons spell out 'MOCHI' above; 'HAPPY BIRTHDAY' banner and confetti. Soft, even lighting." },
+                { title: "pet anjing lucu imut", template: "Cute dog in pink bathrobe, pink shower cap, heart-shaped sunglasses, lounging on pink sofa, under vintage hair dryer. Small pink towel with white paw prints in front. Pink/white checkered wallpaper background. Bright, playful lighting." },
+                { title: "pet kelinci lucu taman", template: "Adorable rabbit wearing tiny flower crown, sitting in blooming garden with butterflies. Soft pastel colors, dreamy atmosphere, shallow depth of field." },
+                { title: "pet burung beo berwarna-warni", template: "Colorful parrot wearing miniature pirate hat, perched on treasure chest with gold coins. Vibrant tropical background, playful lighting, detailed feathers." },
+                { title: "pet kuda poni putri", template: "Miniature pony with braided mane and glittery horn, wearing princess crown and saddle. Enchanted forest background with fairy lights, magical atmosphere." },
+                { title: "pet hamster kecil mungil", template: "Tiny hamster in miniature explorer outfit with backpack, standing on world map. Soft lighting, cute accessories, detailed fur texture." },
+                { title: "pet iguana reptil eksotis", template: "Exotic iguana wearing tiny sunglasses and Hawaiian shirt, lounging on miniature beach chair. Tropical background with palm trees, vibrant colors." },
+                { title: "pet kelinci putih paskah", template: "White rabbit wearing Easter bunny costume with basket of colorful eggs. Spring garden background with blooming flowers, soft pastel lighting." },
                 { title: "pet anjing golden retriever", template: "Golden retriever wearing firefighter helmet and holding toy fire hose. Playful studio background with fire hydrant prop, bright cheerful lighting." },
                 { title: "baby hutan singa hijau", template: "Cute jungle-themed baby photoshoot. Baby in adorable lion costume, lying on fluffy white rug. Scene has plush safari animal toys (giraffe, elephant), green tropical leaves, playful safari adventure." },
-                { title: "baby studio studio", template: "Generate a quiet, intimate studio shot of the 2-year-old child from the attached photo. Sitting on plush cushion, engrossed in a large, colorful picture book, taken from slightly high angle against warm, creamy background. Lighting highlights soft hair and focused expression. Face identical as reference." },
-                { title: "baby bayi ocean outdoor", template: "Cute baby in black hat and swimwear riding a friendly killer whale in clear turquoise ocean. Tropical island with palm trees in the background. Baby smiling, playful, heartwarming scene." },
-                { title: "baby basket bunga merah", template: "Autumn-themed newborn portrait: sleeping baby swaddled in mustard-yellow knit wrap in rustic woven basket, decorated with dried baby's breath and autumn leaves (red, orange), warm cozy seasonal." },
-                { title: "baby studio potret studio", template: "Artistic studio portrait of child surrounded by peonies and roses, cream-colored garment, muted green background, gentle and ethereal mood. Face identical as reference." },
-                { title: "baby green hijau fashion", template: "Professional newborn fairy-themed portrait, baby face as reference. Baby in soft green tulle outfit with fairy wings, posed sleeping on swing surrounded by hydrangea. Soft, bright light, cute newborn posing, textured skin." },
-                { title: "baby portrait vintage vintage", template: "Vintage-themed baby in knit bonnet peeking from blue blanket in stacked old suitcases. Props: globe, books, train, rocking horse. Nostalgic, adventurous atmosphere." },
+                { title: "baby studio potret", template: "Generate a quiet, intimate studio shot of the 2-year-old child from the attached photo. Sitting on plush cushion, engrossed in a large, colorful picture book, taken from slightly high angle against warm, creamy background. Lighting highlights soft hair and focused expression. Face identical as reference." },
+                { title: "baby bayi laut outdoor", template: "Cute baby in black hat and swimwear riding a friendly killer whale in clear turquoise ocean. Tropical island with palm trees in the background. Baby smiling, playful, heartwarming scene." },
+                { title: "baby keranjang bunga merah", template: "Autumn-themed newborn portrait: sleeping baby swaddled in mustard-yellow knit wrap in rustic woven basket, decorated with dried baby's breath and autumn leaves (red, orange), warm cozy seasonal." },
+                { title: "baby studio potret artistik", template: "Artistic studio portrait of child surrounded by peonies and roses, cream-colored garment, muted green background, gentle and ethereal mood. Face identical as reference." },
+                { title: "baby hijau fashion peri", template: "Professional newborn fairy-themed portrait, baby face as reference. Baby in soft green tulle outfit with fairy wings, posed sleeping on swing surrounded by hydrangea. Soft, bright light, cute newborn posing, textured skin." },
+                { title: "baby potret vintage klasik", template: "Vintage-themed baby in knit bonnet peeking from blue blanket in stacked old suitcases. Props: globe, books, train, rocking horse. Nostalgic, adventurous atmosphere." },
                 { title: "baby spongebob whimsical imut", template: "Cheerful child with curly hair and yellow bow in yellow outfit, holding plush Spongebob toy. Spongebob-themed background: pineapple house, coral, sandy floor, Bikini Bottom style. Use reference for face." },
                 { title: "baby candid studio putih", template: "Candid studio shot of child laughing reaching for iridescent soap bubbles, clean white background, pure joy frozen. Face (from reference) identical." },
                 { title: "baby pastel studio bayi", template: "Cute and adorable gender-neutral child sitting on fluffy white cloud, wearing stylish white knit crop top and baggy pants, dreamy studio pastel aesthetic, warm sunlight, playful innocence." },
@@ -1584,51 +1782,51 @@
                 { title: "baby winter teddy cozy", template: "Cozy winter baby portrait with snowman teddy bear. Baby in warm winter outfit, sitting with white snowman teddy bear. Soft winter lighting, warm and cozy atmosphere with snowflakes and winter decorations." },
                 { title: "baby ocean teddy beach", template: "Beach-themed baby portrait with sailor teddy bear. Baby in nautical outfit, sitting with sailor teddy bear. Ocean background with gentle waves, soft beach lighting, fresh and summery atmosphere." },
                 { title: "baby fairy teddy enchanted", template: "Enchanted fairy baby portrait with magical teddy bear. Baby in fairy costume with wings, sitting with sparkly teddy bear. Magical forest background with twinkling lights, ethereal and mystical atmosphere." },
-                { title: "baby superhero costume adventure", template: "Adorable baby dressed as tiny superhero in colorful cape and mask, sitting with action figure toys. Dynamic studio lighting, comic book style background, heroic and playful atmosphere." },
-                { title: "baby chef cooking kitchen", template: "Cute baby in miniature chef hat and apron, sitting in tiny kitchen with toy cooking utensils. Warm kitchen lighting, playful cooking props, adorable and culinary-themed." },
-                { title: "baby astronaut space adventure", template: "Baby in astronaut costume with helmet, sitting with rocket ship toys and space-themed props. Dark space background with stars, cosmic lighting, adventurous and dreamy." },
-                { title: "baby princess crown royal", template: "Baby princess in sparkly crown and elegant dress, sitting on tiny throne with royal scepter. Palace background with golden decorations, regal and majestic atmosphere." },
-                { title: "baby doctor medical cute", template: "Baby in doctor costume with stethoscope, sitting with medical toy kit and plush patients. Clean white background, professional yet adorable medical theme." },
-                { title: "baby firefighter hero brave", template: "Baby firefighter in red helmet and uniform, sitting with fire truck toys and safety props. Bright red and yellow colors, heroic and brave atmosphere." },
-                { title: "baby ballerina dance graceful", template: "Baby ballerina in pink tutu and ballet shoes, sitting in graceful pose with music box. Soft pink lighting, elegant dance studio background, graceful and artistic." },
-                { title: "baby pirate adventure ocean", template: "Baby pirate with eye patch and pirate hat, sitting with treasure chest and toy ship. Ocean background with waves, adventurous and swashbuckling theme." },
-                { title: "baby farmer garden cute", template: "Baby farmer in overalls and straw hat, sitting with toy vegetables and farm animals. Garden background with flowers, wholesome and natural atmosphere." },
-                { title: "baby pilot airplane sky", template: "Baby pilot in aviator hat and goggles, sitting with toy airplane and clouds. Sky blue background with fluffy clouds, adventurous and soaring theme." },
-                { title: "baby mermaid ocean magical", template: "Baby mermaid in shimmering tail and seashell crown, sitting with ocean creatures and pearls. Underwater background with coral, magical and enchanting." },
-                { title: "baby cowboy western adventure", template: "Baby cowboy in hat and boots, sitting with toy horse and lasso. Desert background with cacti, wild west adventure theme." },
-                { title: "baby unicorn magical fantasy", template: "Baby with unicorn horn and rainbow mane, sitting with magical unicorn toys. Pastel rainbow background, fantastical and dreamy atmosphere." },
-                { title: "baby dinosaur prehistoric cute", template: "Baby in dinosaur costume with tail, sitting with dinosaur toys and prehistoric plants. Jungle background, prehistoric adventure theme." },
-                { title: "baby angel heavenly pure", template: "Baby angel with tiny wings and halo, sitting on cloud with heavenly props. Soft white and gold lighting, pure and celestial atmosphere." },
-                { title: "baby ninja martial arts", template: "Baby ninja in black outfit and headband, sitting in martial arts pose with toy weapons. Dojo background, disciplined and adventurous theme." },
-                { title: "baby bee garden sweet", template: "Baby in bee costume with antennae, sitting with flowers and honey pot. Garden background with buzzing bees, sweet and natural theme." },
-                { title: "baby butterfly garden colorful", template: "Baby with butterfly wings and antennae, sitting among flowers and butterflies. Colorful garden background, vibrant and joyful atmosphere." },
-                { title: "baby elephant circus fun", template: "Baby in elephant costume with trunk, sitting with circus toys and colorful props. Circus tent background, fun and entertaining theme." },
-                { title: "baby penguin arctic cute", template: "Baby penguin in black and white outfit, sitting with ice and snow props. Arctic background with snowflakes, cool and adorable theme." },
-                { title: "baby monkey jungle playful", template: "Baby in monkey costume with tail, sitting with banana and jungle vines. Tropical jungle background, playful and mischievous atmosphere." },
-                { title: "baby owl wise nocturnal", template: "Baby owl in feathered costume with big eyes, sitting with books and moon props. Night sky background with stars, wise and mysterious theme." },
-                { title: "baby ladybug garden lucky", template: "Baby ladybug in red and black spotted outfit, sitting with flowers and good luck charms. Garden background, lucky and cheerful atmosphere." },
-                { title: "baby dragon magical fantasy", template: "Baby dragon with tiny wings and scales, sitting with magical crystals and treasure. Fantasy castle background, magical and powerful theme." }
+                { title: "baby superhero kostum petualangan", template: "Adorable baby dressed as tiny superhero in colorful cape and mask, sitting with action figure toys. Dynamic studio lighting, comic book style background, heroic and playful atmosphere." },
+                { title: "baby chef memasak dapur", template: "Cute baby in miniature chef hat and apron, sitting in tiny kitchen with toy cooking utensils. Warm kitchen lighting, playful cooking props, adorable and culinary-themed." },
+                { title: "baby astronot petualangan luar angkasa", template: "Baby in astronaut costume with helmet, sitting with rocket ship toys and space-themed props. Dark space background with stars, cosmic lighting, adventurous and dreamy." },
+                { title: "baby putri mahkota kerajaan", template: "Baby princess in sparkly crown and elegant dress, sitting on tiny throne with royal scepter. Palace background with golden decorations, regal and majestic atmosphere." },
+                { title: "baby dokter medis lucu", template: "Baby in doctor costume with stethoscope, sitting with medical toy kit and plush patients. Clean white background, professional yet adorable medical theme." },
+                { title: "baby pemadam kebakaran pahlawan berani", template: "Baby firefighter in red helmet and uniform, sitting with fire truck toys and safety props. Bright red and yellow colors, heroic and brave atmosphere." },
+                { title: "baby balerina menari anggun", template: "Baby ballerina in pink tutu and ballet shoes, sitting in graceful pose with music box. Soft pink lighting, elegant dance studio background, graceful and artistic." },
+                { title: "baby bajak laut petualangan laut", template: "Baby pirate with eye patch and pirate hat, sitting with treasure chest and toy ship. Ocean background with waves, adventurous and swashbuckling theme." },
+                { title: "baby petani taman lucu", template: "Baby farmer in overalls and straw hat, sitting with toy vegetables and farm animals. Garden background with flowers, wholesome and natural atmosphere." },
+                { title: "baby pilot pesawat langit", template: "Baby pilot in aviator hat and goggles, sitting with toy airplane and clouds. Sky blue background with fluffy clouds, adventurous and soaring theme." },
+                { title: "baby putri duyung laut ajaib", template: "Baby mermaid in shimmering tail and seashell crown, sitting with ocean creatures and pearls. Underwater background with coral, magical and enchanting." },
+                { title: "baby koboi petualangan barat", template: "Baby cowboy in hat and boots, sitting with toy horse and lasso. Desert background with cacti, wild west adventure theme." },
+                { title: "baby unicorn fantasi ajaib", template: "Baby with unicorn horn and rainbow mane, sitting with magical unicorn toys. Pastel rainbow background, fantastical and dreamy atmosphere." },
+                { title: "baby dinosaurus prasejarah lucu", template: "Baby in dinosaur costume with tail, sitting with dinosaur toys and prehistoric plants. Jungle background, prehistoric adventure theme." },
+                { title: "baby malaikat surgawi murni", template: "Baby angel with tiny wings and halo, sitting on cloud with heavenly props. Soft white and gold lighting, pure and celestial atmosphere." },
+                { title: "baby ninja seni bela diri", template: "Baby ninja in black outfit and headband, sitting in martial arts pose with toy weapons. Dojo background, disciplined and adventurous theme." },
+                { title: "baby lebah taman manis", template: "Baby in bee costume with antennae, sitting with flowers and honey pot. Garden background with buzzing bees, sweet and natural theme." },
+                { title: "baby kupu-kupu taman berwarna-warni", template: "Baby with butterfly wings and antennae, sitting among flowers and butterflies. Colorful garden background, vibrant and joyful atmosphere." },
+                { title: "baby gajah sirkus menyenangkan", template: "Baby in elephant costume with trunk, sitting with circus toys and colorful props. Circus tent background, fun and entertaining theme." },
+                { title: "baby penguin arktik lucu", template: "Baby penguin in black and white outfit, sitting with ice and snow props. Arctic background with snowflakes, cool and adorable theme." },
+                { title: "baby monyet hutan nakal", template: "Baby in monkey costume with tail, sitting with banana and jungle vines. Tropical jungle background, playful and mischievous atmosphere." },
+                { title: "baby burung hantu bijak nokturnal", template: "Baby owl in feathered costume with big eyes, sitting with books and moon props. Night sky background with stars, wise and mysterious theme." },
+                { title: "baby kepik taman beruntung", template: "Baby ladybug in red and black spotted outfit, sitting with flowers and good luck charms. Garden background, lucky and cheerful atmosphere." },
+                { title: "baby naga fantasi ajaib", template: "Baby dragon with tiny wings and scales, sitting with magical crystals and treasure. Fantasy castle background, magical and powerful theme." }
             ],
             "CONCEPTUAL & OUTDOOR": [
                 { title: "conceptual nostalgia gang cinematic", template: "Photograph meeting your childhood self in residential alley with mango tree. Adult leans on wall, child gazes in admiration. Warm, golden hour light for nostalgia. Replace both faces with reference, keep details and authenticity (pose, expression, clothing, accessories). 9:16 vertical, cinematic lens/lights, highly realistic skin (no smooth/beauty filter)." },
                 { title: "conceptual vintage conceptual potret", template: "Young woman (late teens), serene expression, long wavy light brown hair, white sleeveless dress, cowl neck, small handbag, outdoor park at night, digicam flash, high contrast, eye-level, vintage filter, early 2000s indie style." },
                 { title: "conceptual ruang sinematik melayang", template: "Subject suspended midair in vast, dark space; graceful pose slightly below center, legs lower, head and torso angled. Flowing light-colored clothing, bright UFO beam from above—shadows underneath. Camera angle from ground; 9:16 ratio. Dramatic, surreal." },
                 { title: "conceptual sekolah sinematik kolase", template: "9-tile Instagram Story collage of Asian boy's vibrant school day: running through gate, opening locker, peeking bookshelves, down corridor, swings, canteen, race POV, sharing snack, leaving at sunset. Candid moments, cool blue/golden tones, cinematic lens grading." },
-                { title: "conceptual green potret portrait", template: "Group scene with bread-themed props: one adult winks holding stacked bread; child covers eyes with torn bread; casual, whimsical attire, lime green background, oversized stylized props, soft and bright lighting, photorealistic, vibrant colors." },
-                { title: "conceptual sza isolated lautan", template: "SZA 'SOS' inspired 16:9 album cover: endless deep blue ocean, thin horizontal white diving board (enters from edge), boy (exact face/hair/skin from reference) sits at the tip, wearing soccer kit and docs. Framing from water level, subject small and isolated, midday natural light." },
-                { title: "conceptual time travel portal", template: "Person stepping through glowing time portal between ancient ruins and futuristic city. Dramatic lighting, contrasting architectural styles, temporal distortion effects around portal. Cinematic composition with deep depth of field." },
-                { title: "conceptual dreamscape floating", template: "Subject floating peacefully among clouds with surreal objects (books, clocks, musical notes) orbiting around. Soft ethereal lighting, dreamlike atmosphere, pastel color palette." },
-                { title: "conceptual mirror reflection", template: "Person looking into ornate mirror that shows alternate version of themselves in different setting. Dramatic lighting, detailed mirror frame, contrasting environments between real and reflected worlds." },
-                { title: "conceptual paper airplane journey", template: "Person releasing paper airplane that transforms into real airplane mid-flight. Whimsical perspective from ground level, golden hour lighting, sense of adventure and freedom." },
+                { title: "conceptual hijau potret roti", template: "Group scene with bread-themed props: one adult winks holding stacked bread; child covers eyes with torn bread; casual, whimsical attire, lime green background, oversized stylized props, soft and bright lighting, photorealistic, vibrant colors." },
+                { title: "conceptual sza terisolasi lautan", template: "SZA 'SOS' inspired 16:9 album cover: endless deep blue ocean, thin horizontal white diving board (enters from edge), boy (exact face/hair/skin from reference) sits at the tip, wearing soccer kit and docs. Framing from water level, subject small and isolated, midday natural light." },
+                { title: "conceptual portal perjalanan waktu", template: "Person stepping through glowing time portal between ancient ruins and futuristic city. Dramatic lighting, contrasting architectural styles, temporal distortion effects around portal. Cinematic composition with deep depth of field." },
+                { title: "conceptual mimpi melayang", template: "Subject floating peacefully among clouds with surreal objects (books, clocks, musical notes) orbiting around. Soft ethereal lighting, dreamlike atmosphere, pastel color palette." },
+                { title: "conceptual cermin refleksi", template: "Person looking into ornate mirror that shows alternate version of themselves in different setting. Dramatic lighting, detailed mirror frame, contrasting environments between real and reflected worlds." },
+                { title: "conceptual pesawat kertas perjalanan", template: "Person releasing paper airplane that transforms into real airplane mid-flight. Whimsical perspective from ground level, golden hour lighting, sense of adventure and freedom." },
                 { title: "outdoor rooftop potret pria", template: "Low-angle cinematic medium shot of man on city rooftop, baseball cap, glasses and black cardigan, white T-shirt, surrounded by motion-blur pigeons, 35mm film aesthetic, warm vintage grading, powerful mood." },
                 { title: "outdoor tangga hitam black", template: "Relaxed person sitting on modern staircase by metal wall, all-black outfit (oversized blazer, pants, sunglasses), hands elegantly bent. Neon ceiling lights, dim lighting, textured skin for realism." },
                 { title: "outdoor grass dress gaun", template: "Artistic low-angle photo: woman in white satin slip dress lying on green grass, modern minimalist house with large windows in background, ground level shot, lens flare, out-of-focus grass." },
                 { title: "outdoor travel bis japan vintage", template: "Young woman in vintage attire (beige cardigan, white blouse, plaid midi skirt) stands in doorway of old Japanese bus, film camera on neck. Nostalgic autumn mood, cinematic soft grading." },
                 { title: "outdoor mode mewah white", template: "A young Asian woman in white sports bra, leggings, sits by edge of rooftop infinity pool, legs partially in blue water, calm gaze. City skyline, luxurious vibe, bright highlights." },
                 { title: "outdoor rain white train", template: "Generate image: subject in front of blurred, moving train, head turned towards camera. Wearing black jacket, mini skirt, white sneakers, holding cup of matcha. Textured skin for realism." },
-                { title: "outdoor forest misty morning", template: "Person walking through misty forest at dawn, soft diffused light filtering through trees. Ethereal atmosphere, shallow depth of field, natural earth tones." },
-                { title: "outdoor urban street night", template: "Cinematic night street scene with wet pavement reflecting neon signs. Subject walking under streetlamp, dramatic lighting, urban atmosphere with shallow depth of field." },
-                { title: "outdoor desert sunset silhouette", template: "Silhouette of person against dramatic desert sunset with vibrant orange and purple sky. Minimalist composition, strong backlighting, sense of vastness and solitude." },
+                { title: "outdoor hutan berkabut pagi", template: "Person walking through misty forest at dawn, soft diffused light filtering through trees. Ethereal atmosphere, shallow depth of field, natural earth tones." },
+                { title: "outdoor jalan kota malam", template: "Cinematic night street scene with wet pavement reflecting neon signs. Subject walking under streetlamp, dramatic lighting, urban atmosphere with shallow depth of field." },
+                { title: "outdoor gurun sunset siluet", template: "Silhouette of person against dramatic desert sunset with vibrant orange and purple sky. Minimalist composition, strong backlighting, sense of vastness and solitude." },
                 { title: "outdoor mountain peak adventure", template: "Adventurer standing on mountain peak with backpack and hiking gear, panoramic view of valleys below. Golden hour lighting, sense of achievement and connection with nature." }
             ],
             "MATERNITY": [
@@ -1858,6 +2056,8 @@
 
 
         // --- Helper Functions ---
+        
+
         function showMessage(text, type = 'info') {
             messageBox.textContent = text;
             messageBox.style.display = 'block';
@@ -1926,6 +2126,10 @@
                 throw error;
             }
         }
+
+        // --- Cache System ---
+        const resultCache = new Map();
+        const MAX_CACHE_SIZE = 50; // Simpan maksimal 50 hasil terakhir
 
         // --- Main Logic ---
 
@@ -2029,6 +2233,8 @@
         
         // Initial population of prompts
         populatePrompts();
+
+        // Imported Photos feature removed per user request
 
         // Get search input element after DOM is loaded
         const promptSearch = document.getElementById('promptSearch');
@@ -2138,6 +2344,8 @@
 
                 if (base64DataImage) {
                     const imageUrl = `data:image/png;base64,${base64DataImage}`;
+                    
+                    
                     outputImage.src = imageUrl;
                     outputImage.classList.remove('hidden');
                     downloadBtn.classList.remove('hidden');
