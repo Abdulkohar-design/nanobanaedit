@@ -156,7 +156,7 @@
         <div class="card">
             <h1 class="text-3xl font-bold text-center mb-2 text-white">TEMPLATE NANO BANANA</h1>
             <p class="text-center text-gray-400 mb-8">
-                By.IMAJINASI LOKAL <br> Kamu Tinggal Kirim Fotomu dan Pilih Model Yang Disukai
+                By VDMAX STUDIO AI <br> Kamu Tinggal Kirim Fotomu dan Pilih Model Yang Disukai
             </p>
             
             <div class="flex flex-col md:flex-row gap-8">
@@ -201,6 +201,13 @@
                         <label for="promptSelector" class="block text-sm font-medium text-gray-300 mb-2">Pilih Template Prompt (Opsional)</label>
                         <select id="promptSelector" class="w-full p-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-700 text-gray-200">
                             <option value="">-- Pilih atau tulis manual di bawah --</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="poseSelector" class="block text-sm font-medium text-gray-300 mb-2">Pilih Pose (Opsional)</label>
+                        <select id="poseSelector" class="w-full p-2 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-gray-700 text-gray-200">
+                            <option value="">-- Pilih pose atau biarkan natural --</option>
                         </select>
                     </div>
 
@@ -274,10 +281,531 @@
         const apiKeyInput = document.getElementById('apiKeyInput'); // New element
         // const promptSearch = document.getElementById('promptSearch'); // Search input - moved to after DOM load
 
+        // --- Pose Database ---
+        const poses = {
+            "Natural & Casual": [
+                { title: "Santai Berdiri", description: "pose standing relaxed with hands naturally at sides or in pockets" },
+                { title: "Santai Duduk", description: "pose sitting casually with comfortable, natural posture" },
+                { title: "Candid Senyum", description: "pose with genuine smile, slightly looking away from camera" },
+                { title: "Menoleh ke Samping", description: "pose looking sideways with gentle head turn" }
+            ],
+            "Professional & Formal": [
+                { title: "Professional Standing", description: "pose standing straight with confident posture, arms crossed or at sides" },
+                { title: "Business Portrait", description: "pose with professional smile, head slightly tilted" },
+                { title: "Executive Seated", description: "pose sitting in office chair with authoritative but approachable posture" },
+                { title: "Meeting Pose", description: "pose as if in discussion, gesturing with hands professionally" }
+            ],
+            "Fashion & Style": [
+                { title: "Model Walk", description: "pose mid-stride with fashion model walking posture" },
+                { title: "Fashion Lean", description: "pose leaning against wall with stylish, relaxed attitude" },
+                { title: "Editorial Stance", description: "pose with artistic, editorial style position" },
+                { title: "Style Showcase", description: "pose to highlight outfit, hand on hip or in motion" }
+            ],
+            "Fun & Dynamic": [
+                { title: "Jump Joy", description: "pose mid-jump with happy expression" },
+                { title: "Dance Move", description: "pose in graceful dance-like motion" },
+                { title: "Action Shot", description: "pose in dynamic movement or action" },
+                { title: "Playful Pose", description: "pose with fun, energetic expression and body language" }
+            ],
+            "Artistic & Creative": [
+                { title: "Dramatic Light", description: "pose to create interesting shadows and light play" },
+                { title: "Silhouette Style", description: "pose for striking silhouette effect" },
+                { title: "Abstract Angle", description: "pose from unique or unusual angle" },
+                { title: "Artistic Expression", description: "pose with creative, artistic body positioning" }
+            ],
+            "Romantic & Soft": [
+                { title: "Gentle Portrait", description: "pose with soft, romantic expression" },
+                { title: "Dreamy Look", description: "pose with dreamy, far-off gaze" },
+                { title: "Sweet Smile", description: "pose with sweet, genuine smile and gentle head tilt" },
+                { title: "Romantic Mood", description: "pose with romantic, soft body language" }
+            ]
+        };
+
         // --- Prompt Database (Total 230 Prompts, Dikelompokkan berdasarkan Tema) ---
         // Catatan: Gunakan (Uploaded Person) sebagai placeholder untuk subjek tunggal.
         // Gunakan "the two subjects" untuk dua subjek.
+        const categorizedPoses = {
+            "Ekspresi Wajah": [
+                { title: "Tersenyum Natural", description: "pose natural with soft smile, relaxed expression" },
+                { title: "Tersenyum Lebar", description: "pose with wide smile showing teeth, joyful expression" },
+                { title: "Serius", description: "pose with serious expression, focused look" },
+                { title: "Menggoda", description: "pose with flirty expression, playful wink" },
+                { title: "Tertawa", description: "pose laughing naturally, candid joyful moment" }
+            ],
+            "Pose Kepala & Bahu": [
+                { title: "Close-up Wajah", description: "close-up headshot, direct eye contact" },
+                { title: "Profile View", description: "elegant side profile portrait" },
+                { title: "3/4 View", description: "classic 3/4 angle portrait" },
+                { title: "Menoleh ke Samping", description: "looking to the side, candid pose" },
+                { title: "Menunduk Anggun", description: "looking down gracefully, elegant pose" }
+            ],
+            "Pose Duduk": [
+                { title: "Duduk Santai", description: "sitting relaxed and casual" },
+                { title: "Duduk Anggun", description: "sitting elegantly with crossed legs" },
+                { title: "Duduk di Tangga", description: "sitting on steps, casual pose" },
+                { title: "Duduk di Kursi", description: "sitting posed in a chair" },
+                { title: "Duduk di Lantai", description: "sitting on floor, casual style" }
+            ],
+            "Pose Berdiri": [
+                { title: "Berdiri Tegap", description: "standing straight, confident pose" },
+                { title: "Berdiri Menyamping", description: "standing side view, elegant" },
+                { title: "Berdiri Santai", description: "standing casual, relaxed pose" },
+                { title: "Berdiri dengan Tangan di Pinggang", description: "standing with hands on hips" },
+                { title: "Pose Runway", description: "fashion runway pose, dynamic" }
+            ],
+            "Pose Fashion": [
+                { title: "High Fashion", description: "editorial fashion pose, dramatic" },
+                { title: "Casual Style", description: "relaxed fashion pose, natural" },
+                { title: "Street Style", description: "urban fashion pose, cool" },
+                { title: "Elegant Pose", description: "sophisticated fashion pose" },
+                { title: "K-Pop Style", description: "trendy K-pop inspired pose" }
+            ],
+            "Pose Aksi": [
+                { title: "Sedang Berjalan", description: "walking pose, motion" },
+                { title: "Sedang Menari", description: "dancing pose, dynamic" },
+                { title: "Sedang Melompat", description: "jumping pose, energetic" },
+                { title: "Sedang Berputar", description: "twirling pose, movement" },
+                { title: "Action Shot", description: "dynamic action pose" }
+            ],
+            "Pose Artistik": [
+                { title: "Pose Siluet", description: "artistic silhouette pose" },
+                { title: "Floating/Levitating", description: "floating in air pose" },
+                { title: "Refleksi di Air", description: "reflection in water pose" },
+                { title: "Double Exposure", description: "artistic double exposure" },
+                { title: "Dramatic Lighting", description: "pose with dramatic shadows" }
+            ],
+            "Pose Glamour": [
+                { title: "Red Carpet", description: "elegant red carpet pose with evening gown" },
+                { title: "Hollywood Glam", description: "classic Hollywood glamour pose" },
+                { title: "Jewelry Showcase", description: "pose highlighting luxury jewelry" },
+                { title: "High Fashion Editorial", description: "dramatic high fashion magazine pose" },
+                { title: "Couture Style", description: "haute couture fashion pose" }
+            ],
+            "Pose Outdoor": [
+                { title: "Beach Sunset", description: "relaxed beach pose at sunset" },
+                { title: "Urban Explorer", description: "city street style pose" },
+                { title: "Nature Adventure", description: "active outdoor nature pose" },
+                { title: "Garden Romance", description: "romantic pose in flower garden" },
+                { title: "Cityscape View", description: "rooftop or city overlook pose" }
+            ],
+            "Pose Modern": [
+                { title: "Tech Lifestyle", description: "modern pose with tech gadgets" },
+                { title: "Coffee Shop Casual", description: "relaxed modern cafe pose" },
+                { title: "Fitness Style", description: "athletic modern workout pose" },
+                { title: "Digital Nomad", description: "modern work-lifestyle pose" },
+                { title: "Social Media Ready", description: "instagram-worthy pose" }
+            ]
+        };
+
         const categorizedPrompts = {
+            "Foto AI Collection (Kreasi User)": [
+                // Fashion & Street Style (Modern/Edgy)
+                { 
+                    title: "Yellow Dress Elegance", 
+                    template: "A sophisticated, studio-quality portrait of (Uploaded Person) wearing a vibrant **mustard yellow fitted dress** adorned with yellow flower details on the shoulders, layered with long strands of **pearl necklaces**. The pose is elegant, holding a matching yellow clutch bag. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Urban Cargo Chic", 
+                    template: "A moody, low-light photograph of (Uploaded Person) leaning against a pillar in a **dark parking garage**. She is styled in **baggy blue cargo jeans, a black cropped top**, and chunky white sneakers, holding a small brown paper bag. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Black Streetwear Edge", 
+                    template: "A full-body shot of (Uploaded Person) posing confidently in a dimly lit outdoor area at night. She wears a **black denim tube top, a matching black mini skirt**, with a thin belt, and has long dark hair. **Face clearly visible**. --ar 9:16" 
+                },
+                // Adding first 47 templates from the collection
+                {
+                    title: "Sporty Mountain Trip",
+                    template: "A dynamic outdoor photograph of (Uploaded Person) standing on a winding **mountain road overlook**, holding an iced coffee and making a peace sign. She wears **baggy wide-leg jeans, a white zip-up cropped hoodie**, and a black baseball cap. **Face clearly visible**. --ar 9:16"
+                },
+                { 
+                    title: "Pink & Black Y2K Vibe", 
+                    template: "A bright, indoor photograph of (Uploaded Person) in a room decorated with **Kuromi plushies and pink/VOGUE posters**. She wears a **pink patterned long-sleeve cut-out crop top and matching skirt**, accessorized with star-shaped sunglasses on her head. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Bandana Street Glam", 
+                    template: "A close-up portrait of (Uploaded Person) with a dramatic, shadowed studio backdrop. She wears a **black tube top**, styled with large silver hoop earrings and a **black and white bandana** tied around her head. **Face clearly visible**, dramatic winged eyeliner. --ar 9:16" 
+                },
+                { 
+                    title: "Brown Contrast Glam", 
+                    template: "A dramatic, soft-lit studio portrait of (Uploaded Person) wearing an **off-the-shoulder black top** with bold red lipstick and light brown/ash-toned wavy hair. She wears a gold necklace and watch. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pastel Kawaii Room", 
+                    template: "An adorable, brightly lit portrait of (Uploaded Person) in a **pink, pastel-themed bedroom** surrounded by plush toys. She wears a **pastel rainbow striped knit two-piece set** and has butterfly clips in her dark, wavy hair. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Milk & Cookies Cozy", 
+                    template: "A cozy, soft-focus shot of (Uploaded Person) wearing a **light blue chunky knit sweater**, holding a teddy bear next to a glass of milk and cookies. She has dark hair styled in pigtails with cute clips. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Red Gingham Pin-up", 
+                    template: "A vibrant, playful portrait of (Uploaded Person) dressed in a **red and white gingham top** with her hair in pigtails tied with cherry accessories. She holds a large pink swirled lollipop and winks playfully. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Denim & Colorful Braids", 
+                    template: "A highly stylized portrait of (Uploaded Person) with **purple-tinted wavy hair** in pigtails decorated with blue and pink ribbons. She wears a **denim cut-out collared top** and pink-accented makeup. She has pink novelty sunglasses perched on her head. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pink Power Suit", 
+                    template: "A full-length photograph of (Uploaded Person) posing in an **all-pink opulent room** with large decorative mirrors. She wears a **long, lacy pink dress/suit hybrid** with dramatic pink platform heels and holds a small white purse. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Candy Color Play", 
+                    template: "A vibrant, cheerful portrait of (Uploaded Person) in a **bright pink off-the-shoulder crop top and matching skirt**. She is holding a small brown dog and winks while posing against a solid pink, bokeh background. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pink & White Cottagecore", 
+                    template: "A soft, romantic portrait of (Uploaded Person) lying down, wearing a **cream-colored Victorian-style blouse with lace gloves** and a wide-brimmed lace hat. The scene includes scattered pearls and fresh strawberries. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pink Pigtails & Stickers", 
+                    template: "A whimsical portrait featuring (Uploaded Person) with long black pigtails decorated with pink ribbons and candy accessories. She wears a **bright pink off-the-shoulder top** and has playful pink sticker decals on her cheeks, holding a lollipop. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "White Pearl Bridal", 
+                    template: "An intense, highly detailed close-up portrait of (Uploaded Person) wearing a **white, heavily beaded wedding gown** adorned with thousands of pearls and crystals, topped with an elaborate **silver jeweled crown**. Her hands show intricate white henna art. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "White Modern Bridal Veil", 
+                    template: "A soft, ethereal portrait of (Uploaded Person) in a **white strapless beaded wedding dress** draped with a delicate lace veil. Sunlight streams through the window, casting **dappled lace shadow patterns** across her face and shoulders. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Javanese/Sundanese Bridal - White", 
+                    template: "A professional studio portrait of (Uploaded Person) in **traditional Javanese/Sundanese bridal attire**. She wears a **white lace kebaya**, a simple hijab, and an ornate silver headpiece with jasmine garlands (**ronce melati**). **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Javanese Bridal - Earth Tones", 
+                    template: "A portrait of (Uploaded Person) wearing **traditional brown/gold embroidered kebaya** and batik cloth, complemented by an elaborate silver wedding crown and jasmine garlands. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Traditional Minangkabau Bride", 
+                    template: "A striking portrait of (Uploaded Person) adorned in **rich maroon velvet and gold Minangkabau traditional wedding attire**, featuring a very tall, intricate **gold crown (Suntiang)**. **Face clearly visible**, pose suggests reverence. --ar 9:16" 
+                },
+                { 
+                    title: "Blue Traditional Kebaya", 
+                    template: "A portrait of (Uploaded Person) wearing a **light blue sequined lace kebaya** with a matching hijab, adorned with a silver crown and hanging jasmine garlands. White henna is visible on her hands. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Ethereal Water Fairy", 
+                    template: "An **artistic, high-concept photograph** of (Uploaded Person) lying down against a dark, sparkling background suggestive of water or stardust. She wears a **white gown heavily encrusted with pearls and silver crystal filigree** as a headpiece. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Gothic Lavender Princess", 
+                    template: "A dramatic full-length photograph of (Uploaded Person) posing on an **ornate stone staircase surrounded by climbing pink roses**. She wears a flowing, **layered tulle ballgown in a deep lavender/purple hue**, with delicate off-the-shoulder sleeves. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Blue Cloud Ballgown Queen", 
+                    template: "A grand portrait of (Uploaded Person) standing at the base of a **massive interior staircase in a classical hall**. She wears a voluminous, **layered ballgown in shades of dusty blue and white cloud print**, featuring a corset bodice. **Face clearly visible**. --ar 16:9" 
+                },
+                { 
+                    title: "Throne Room Royalty", 
+                    template: "A majestic, wide-angle portrait of (Uploaded Person) seated dramatically on a **large, ornate golden throne** in a vast, classical hall with large windows. She wears a **flowing pink and blue ombre gown** with bell sleeves. **Face clearly visible**. --ar 16:9" 
+                },
+                { 
+                    title: "Ash Brown Waves & Gold Jewelry", 
+                    template: "A close-up, soft-lit studio portrait of (Uploaded Person) with **ash brown/taupe wavy hair** parted to the side. She wears a black off-the-shoulder top, a delicate gold 'Nia' necklace, and a gold watch. Features deep red lipstick. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Soft Romantic Braids & Pearl Buns", 
+                    template: "A sun-kissed portrait of (Uploaded Person) with her hair styled in **two high buns adorned with pearls**, soft bangs framing the face, and soft wavy hair falling down. She wears a cream floral top. Dramatic sunlight shadows create texture on her skin. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pink Gradient K-Beauty Look", 
+                    template: "An extremely colorful portrait of (Uploaded Person) with **vivid purple hair in pigtails** laced with pink and blue ribbons. Makeup features heavy pink blush, bright pink lips, and detailed white dots/rhinestones under the eyes. She wears a denim top. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Elegant Black Updo & Shhh Pose", 
+                    template: "A portrait of (Uploaded Person) with her **dark hair pulled up into a sleek bun** with short bangs. She wears a black top and poses with her index finger held vertically over her lips. Background is softly lit with bokeh effects. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Smoky Eye & Bold Lip", 
+                    template: "A moody, high-contrast portrait of (Uploaded Person) featuring very dramatic smoky eye makeup and a **deep burgundy/wine lip color**. Her hair is styled in flowing dark waves. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Strawberry Girl Pigtails", 
+                    template: "A highly stylized portrait of (Uploaded Person) with dark hair in two pigtails tied with red gingham bows and cherry clips. She wears a **red and white gingham dress** and holds a bouquet of pink fabric flowers. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Washing Money Concept", 
+                    template: "A bizarre, satirical concept photo of (Uploaded Person) sitting inside a kitchen sink, surrounded by **large Indonesian 50,000 Rupiah banknotes floating in soapy water**. She holds a yellow sponge, wearing a silk black shirt draped off the shoulder. **Face clearly visible**. --ar 16:9" 
+                },
+                { 
+                    title: "Pink Aesthetic Streamer Setup", 
+                    template: "A cozy portrait of (Uploaded Person) sitting at a **pink desk with a pink mechanical keyboard**. She wears a **rainbow striped knit turtleneck sweater** and a dusty rose hijab, set against a pink-themed room with cartoon posters. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Urban Convertible Night Drive", 
+                    template: "A nighttime photo of (Uploaded Person) seated in the driver's seat of a **vintage-style pink convertible**. The background is a blurred, neon cityscape. She wears a white blazer over a lilac top and black pants. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Classic Car Night Scene", 
+                    template: "A retro-style photograph of (Uploaded Person) sitting inside the driver's seat of a **dark interior car (possibly BMW E36/E34)** parked on a city street at night with bright background bokeh. She wears a white tank top and baggy jeans. Grainy film effect. **Face clearly visible**. --ar 16:9" 
+                },
+                { 
+                    title: "Formal Pink Hijab Gown", 
+                    template: "A full-length photograph of (Uploaded Person) seated within a **giant, ornate pink picture frame** in a highly decorative pink room. She wears an **elaborate, long-train pink lace gown** with a matching hijab and high pink platform heels. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Golden Hour Window Light", 
+                    template: "A beautifully illuminated portrait of (Uploaded Person) standing near a sheer, lace-patterned curtain. Strong, focused sunlight casts **organic shadow patterns** onto her bare shoulders and face. She wears a white lace bustier. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Rider on White Horse (Palace Interior)", 
+                    template: "An **artistic, highly detailed AI-generated image** of (Uploaded Person) gracefully seated sidesaddle on a pure white horse within a grand, ornate stable or hall with classic architecture. She wears a flowing, elegant ballgown. **Face clearly visible**. --ar 16:9" 
+                },
+                { 
+                    title: "Yellow Dress - Full Body Pose", 
+                    template: "Full body shot of (Uploaded Person) in the **yellow dress with pearl necklaces**, posing elegantly in the outdoor colonnade setting. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "White Skirt & Winking Pose", 
+                    template: "Outdoor shot of (Uploaded Person) in the **white lace top and skirt set**, sitting on a wooden stool by the fruit stand, striking a playful pose by saluting her forehead and winking. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Casual Jeans & Peace Sign", 
+                    template: "Full body shot of (Uploaded Person) in **wide-leg jeans and white cropped zip-up hoodie**, standing on the mountain road, flashing a peace sign with one hand and holding coffee in the other. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Beach Sunset - Tongue Out Pose", 
+                    template: "Playful shot of (Uploaded Person) on the beach at sunset, wearing the **floral two-piece set**, sticking her tongue out and winking at the camera. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Black Corset & Road Pose (Shhh)", 
+                    template: "(Uploaded Person) sitting cross-legged on the middle of the asphalt mountain road in a **black strapless corset and black cargo pants**, holding a finger to her lips in a 'shush' gesture. Sunglasses resting on her head. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Bridal White Henna Shhh", 
+                    template: "Close-up of (Uploaded Person) in the **sparkling white bridal gown**, covering one eye and keeping a finger to her lips in a 'shush' gesture. Intricate white henna design on her hands. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pink Pastel Look - Pouting Pose", 
+                    template: "(Uploaded Person) in the **rainbow knit two-piece set**, looking slightly pouting/skeptical with her hand near her chin, surrounded by pastel colors and stuffed animals. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Black Tube Top & Jeans - Pensive Pose", 
+                    template: "(Uploaded Person) sitting inside the **city night car**, looking thoughtfully at the camera, wearing a white tank top and baggy jeans. Grainy, cinematic filter. **Face clearly visible**. --ar 16:9" 
+                },
+                { 
+                    title: "Brown Halter Dress - Elegant Lean", 
+                    template: "(Uploaded Person) posing indoors in a warm, ambient light setting, wearing a **shimmery, metallic brown ruched halter dress**. She leans one hand on a table edge. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Black Off-Shoulder Studio Glam", 
+                    template: "High-key lighting portrait of (Uploaded Person) with ash brown hair, wearing a **black off-the-shoulder top**, showcasing strong highlight work on the cheekbones. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pink & Black Skirt Outfit", 
+                    template: "(Uploaded Person) posing in the **pink patterned cut-out crop top and skirt**, holding a Kuromi plushie, winking playfully against the themed background. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "White Suit & Pink Car - Day Light", 
+                    template: "(Uploaded Person) posing leaning against a **vintage pink convertible** at dusk/night, wearing a **white structured blazer and pants/skirt** with a lilac turtleneck and matching hijab. City skyline in the background. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Bridal - Pensive Veil Shadow", 
+                    template: "(Uploaded Person) looking thoughtfully to the side, wearing the white wedding dress and veil, with strong **shadows from the window lace falling onto her face**. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Traditional Bride - Gold Crown & Pose", 
+                    template: "Close-up of the Minangkabau bride look, where (Uploaded Person) touches the elaborate **gold Suntiang crown** with one hand. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Cottagecore Wink", 
+                    template: "(Uploaded Person) winking at the camera while resting her chin on her lace-gloved hands in the **strawberry and pearl setting**. Her white dress is highly detailed. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pink Room Pouting Pose", 
+                    template: "(Uploaded Person) sitting in the pink chair, wearing the **pink turtleneck and white pleated skirt**, holding a finger to her lips in a 'shush' gesture. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Butterfly Hair & Pink Cheek Detail", 
+                    template: "(Uploaded Person) in the **pink crop top**, featuring the unique makeup with heart/sticker blush accents and multiple small butterfly clips in her dark braids. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Sunlight Halo Updo", 
+                    template: "Portrait of (Uploaded Person) with her hair in **two high buns decorated with pearls**, catching the warm, golden sunlight that creates a strong halo effect around her hair. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Purple Princess Stairs Pose", 
+                    template: "(Uploaded Person) standing midway up the rose-covered stone staircase, looking directly at the camera with a serious expression, showcasing the **flowing purple layered gown**. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Blue Ballgown - Shushing Pose", 
+                    template: "(Uploaded Person) on the grand staircase in the **blue/cloud print gown**, holding a finger up to her lips in a silencing gesture. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Business Casual Hijab", 
+                    template: "(Uploaded Person) posing with a lilac hijab, white blazer, and matching suit separates next to the **pink vintage convertible** at night. Smart, professional look. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Professional Look with Glasses", 
+                    template: "(Uploaded Person) wearing a **grey pinstripe blazer** over a white top, holding up a black and white photo print. She wears thin-rimmed gold glasses. Background collage of VOGUE covers. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Teddy Bear Milk & Cookies Pose 2", 
+                    template: "(Uploaded Person) in the light blue sweater, holding the teddy bear closely, with a genuine, warm smile. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "White Bridal - Happy Expression", 
+                    template: "Close-up of (Uploaded Person) in the **sparkling white bridal outfit**, showing an excited, wide smile, with hands performing a small heart gesture near her chest. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Blue Kebaya - Serious Pose", 
+                    template: "(Uploaded Person) in the **light blue sequined kebaya**, looking calmly at the camera, hands resting together below the waist. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Yacht View - Looking Away", 
+                    template: "(Uploaded Person) on the yacht deck, looking towards the turquoise sea, wearing the **white belted outfit** (hijab style). Bright sunlight, focus on the luxurious setting. **Face clearly visible**. --ar 16:9" 
+                },
+                { 
+                    title: "Black Outfit - Sitting on Road", 
+                    template: "(Uploaded Person) sitting cross-legged on the road in **all-black attire (tube top, cargo pants)**, looking directly at the camera with a serious expression. Bright sky and green hills in the background. **Face clearly visible**. --ar 16:9" 
+                },
+                { 
+                    title: "Pink Outfit - Waving Pose", 
+                    template: "(Uploaded Person) standing on the mountain road in the **black mini-skirt/one-shoulder top outfit**, flashing a peace sign high in the air. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Fruit Stand Posing - Wink", 
+                    template: "(Uploaded Person) posing next to the fruit stand, hand near her forehead in a salute, winking at the camera. **White lace outfit**. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Elegant Purple Dress - Posing on Stairs", 
+                    template: "(Uploaded Person) posing elegantly on the purple staircase, hand resting on the banister, showing the full **drape and volume of the purple gown**. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Blue Gown - Leaning on Stair Railing", 
+                    template: "(Uploaded Person) leaning on the banister of the grand staircase in the **blue cloud gown**, looking pensively to the side. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pink Kawaii Room - Peace Sign", 
+                    template: "(Uploaded Person) in the **pink fuzzy turtleneck and white skirt**, making a peace sign, eyes wide with a cute expression. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Ash Hair - Red Lip Posing", 
+                    template: "(Uploaded Person) in the black off-shoulder top, hand near her mouth in a classic modeling pose, showcasing the **smoky eye and dark red lip**. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Cottagecore - Strawberry Close-up", 
+                    template: "Close-up of (Uploaded Person) in the **Victorian white outfit**, showing the details of the lace gloves and the scattered pearls and strawberries near her face. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Holographic Bright Braids", 
+                    template: "(Uploaded Person) in the denim top, showcasing the vibrant **purple braids interwoven with pastel ribbons**, wearing the pink novelty glasses on top of her head. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Black Urban Night - Serious Look", 
+                    template: "(Uploaded Person) in the black tank top/jeans, posing seriously inside the car at night, looking intensely at the camera. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Golden Hour - Bun Updo", 
+                    template: "Close-up shot of (Uploaded Person) with her hair in **two high pearl-adorned buns**, bathed in warm, dappled sunlight against a soft, blurred background. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Monochrome Pink Vibe", 
+                    template: "(Uploaded Person) in the **all-pink Versace-esque outfit**, holding the dog, with the entire background bathed in solid bright pink light. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "White Hijab Bridal - Direct Gaze", 
+                    template: "Studio portrait of the bride in the **white pearl dress**, looking directly forward with a strong, unwavering gaze. Hands folded in front. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Yellow Floral Shoulder Detail", 
+                    template: "Macro close-up focusing on the **yellow dress shoulder detail** (3D flowers) and the pearl necklace layering on (Uploaded Person). **Face visible in the upper third**. --ar 9:16" 
+                },
+                { 
+                    title: "Fruit Stand Vibe - Casual Seated", 
+                    template: "(Uploaded Person) sitting casually amidst the orange crates, hands resting on her knees, looking directly at the camera with a slight pout. **White lace top/skirt**. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pink & Purple Pastel Gamer Room", 
+                    template: "(Uploaded Person) in the **rainbow sweater and mauve hijab**, sitting at the desk, looking thoughtfully at the camera, contrasting the soft pastel interior with her striking eye makeup. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "City Night - Lilac Suit", 
+                    template: "(Uploaded Person) sitting in the **pink convertible**, wearing the white blazer and lilac outfit, illuminated by the city lights bokeh behind her. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Black & White Photo Prop", 
+                    template: "(Uploaded Person) holding a **black and white landscape photo print** partially covering her face, wearing the grey pinstripe blazer and glasses. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Black Corset - Playful Pose", 
+                    template: "(Uploaded Person) sitting on the road in the black corset outfit, one hand near her face, giving a slight, playful expression. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Yellow Dress & Pearls - Side Profile", 
+                    template: "Portrait of (Uploaded Person) in the yellow dress, looking slightly off-camera with an intense expression, showcasing the elegance of the pearls and dress neckline. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "White Lace Gloves Detail", 
+                    template: "Close-up focusing on (Uploaded Person)'s hands wearing the **delicate lace gloves with ribbon bows**, while posing romantically near the scattered jewelry. **Face visible**. --ar 9:16" 
+                },
+                { 
+                    title: "White Gown - Smiling Princess", 
+                    template: "(Uploaded Person) sitting on the golden throne in the **pink/blue ombre dress**, looking genuinely happy and covering her mouth with one hand. Grand royal setting. **Face clearly visible**. --ar 16:9" 
+                },
+                { 
+                    title: "Purple Gown - Shushing Outdoors", 
+                    template: "(Uploaded Person) standing on the grand rose garden staircase in the **purple gown**, holding a finger to her lips for a secretive, ethereal look. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "White & Brown Hijab Outfit - Yacht Pose", 
+                    template: "(Uploaded Person) posing standing on the yacht deck, wearing the **white blazer over brown top**, looking directly at the camera with a serious expression. Bright turquoise water background. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Blue Jeans - Car Interior Playful", 
+                    template: "(Uploaded Person) in the car, sticking her tongue out, resting her hand on the steering wheel. **White tank top and jeans**. Cinematic grain effect. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pink Aesthetic - Bow Hair", 
+                    template: "(Uploaded Person) in the **pink fuzzy turtleneck and white skirt**, with her hair in high pigtails secured with large pink gingham bows. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Grey Hijab Makeup Session", 
+                    template: "Candid shot of (Uploaded Person) in a **silky grey modest dress/abaya**, receiving makeup application (eyeliner touch-up) in a room decorated with fashion posters. She wears a veiled headpiece with peacock feathers. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Ethereal White Gown - Close Up", 
+                    template: "Close-up on the shoulders and face of (Uploaded Person) in the **white pearl wedding dress**, capturing the detailed pearl embroidery texture against the soft light. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Blue & White Wedding Look - Shhh", 
+                    template: "(Uploaded Person) in the light blue kebaya, covering her eyes with hennaed hands while making a 'shush' gesture. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Yellow Car Backdrop - Standing Pose", 
+                    template: "Full body shot of (Uploaded Person) standing directly in front of the **modified bright yellow Toyota Alphard**, all doors open, standing on wet asphalt. Black top and ripped jeans. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Romantic Light - Peachy Tones", 
+                    template: "(Uploaded Person) in a **light, floral print top**, hair in dual pearl buns, illuminated by strong, warm directional light creating soft facial shadows. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Glamorous Blue Gown - Center Frame", 
+                    template: "(Uploaded Person) centered on the grand staircase in the **blue cloud-patterned gown**, looking directly forward with a confident expression. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Black Strapless - Leaning Forward", 
+                    template: "(Uploaded Person) in the black corset/tube top, leaning forward slightly with hands resting on her knees, in the **parking garage setting**. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Pink Glam - Holding Lollipop", 
+                    template: "(Uploaded Person) with colorful hair braids, posing happily against a bright background, holding a lollipop, focusing on the pink and colorful makeup look. **Face clearly visible**. --ar 9:16" 
+                },
+                { 
+                    title: "Black Bodysuit Car Pose - Winking", 
+                    template: "(Uploaded Person) in the car, wearing the white tank and jeans, winking and sticking her tongue out playfully. **Face clearly visible**. --ar 9:16" 
+                },
+                {
+                    title: "Pastel Hijab Gamer - Cozy Look", 
+                    template: "(Uploaded Person) wearing the **rainbow striped sweater and mauve hijab**, resting her cheek on her hand at a desk, embodying a cute, cozy streamer aesthetic. **Face clearly visible**. --ar 9:16" 
+                },
+                {
+                    title: "Masjidil Haram Couple Portrait",
+                    template: "A high-resolution photograph of the two subjects standing side by side at the **Masjidil Haram in Makkah**. The man (175 cm, slim build) and woman (155 cm, slim build) wear elegant **white Islamic attire** - him in crisp ihram and her in a graceful white abaya with matching hijab. Natural, respectful poses with **realistic lighting and shadows** cast by the iconic mosque architecture. **Original faces preserved and clearly visible**. Background shows the majestic Kaaba and mosque interior in stunning detail. Religious, dignified atmosphere. --ar 3:4"
+                }
+            ],
             "Realisme Indonesia Kontemporer (Wajah Jelas)": [
                 { 
                     title: "WARTEG - Makan di Warteg Ramai", 
@@ -2225,6 +2753,24 @@
                 promptGuide.value = ""; // Clear textarea if the default option is selected
             }
         });
+
+        // Setup pose selector
+        const poseSelector = document.getElementById('poseSelector');
+        
+        // Populate pose selector with categories and poses
+        Object.entries(categorizedPoses).forEach(([category, poses]) => {
+            const groupEl = document.createElement('optgroup');
+            groupEl.label = category;
+            
+            poses.forEach(pose => {
+                const option = document.createElement('option');
+                option.value = pose.description;
+                option.textContent = pose.title;
+                groupEl.appendChild(option);
+            });
+            
+            poseSelector.appendChild(groupEl);
+        });
         
         // Setup all three image uploaders
         setupImageUploader('dropArea1', 'imageUpload1', 'dropText1', 'previewImage1');
@@ -2252,6 +2798,7 @@
             const file2 = document.getElementById('imageUpload2').files[0];
             const file3 = document.getElementById('imageUpload3').files[0];
             let promptText = promptGuide.value;
+            const selectedPose = poseSelector.value;
 
             if (!file1) {
                 showMessage('Gambar Referensi 1 wajib diunggah.', 'error');
@@ -2260,6 +2807,11 @@
             if (!promptText) {
                 showMessage('Prompt Panduan tidak boleh kosong. Pilih template atau tulis manual.', 'error');
                 return;
+            }
+
+            // Add pose to prompt if one is selected
+            if (selectedPose) {
+                promptText = `${promptText}, with ${selectedPose}`;
             }
 
             loading.classList.remove('hidden');
@@ -2375,4 +2927,3 @@
     </script>
 </body>
 </html>
-
