@@ -2274,7 +2274,7 @@
                 // If the user inputs an API key, use it. Otherwise, use the empty default provided by the environment.
                 const userApiKey = apiKeyInput.value.trim();
                 const currentApiKey = userApiKey === "" ? "" : userApiKey;
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${currentApiKey}`;
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${currentApiKey}`;
                 // --- END API Configuration ---
 
                 const imageFiles = [file1, file2, file3].filter(file => file);
@@ -2375,3 +2375,4 @@
     </script>
 </body>
 </html>
+
